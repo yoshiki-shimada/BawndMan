@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="1TitleScene">
+      <UniqueIdentifier>{41ad14c0-c545-43e6-aebe-9aa741070220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2MainScene">
+      <UniqueIdentifier>{19b4b7bc-b7bb-4971-8b0a-b167e998d7c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3OverScene">
+      <UniqueIdentifier>{e82e6377-a7d8-4aa1-81df-67856dee206e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4ClearScene">
+      <UniqueIdentifier>{be03353a-eed0-4137-84f1-f68339667041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1TitleScene\cpp">
+      <UniqueIdentifier>{ff0d8736-8f1d-485d-94c3-72b5d9fa03e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1TitleScene\h">
+      <UniqueIdentifier>{9d7055f3-57d8-4f66-a824-5189557d3707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2MainScene\cpp">
+      <UniqueIdentifier>{7678d097-6af6-415e-a8ba-389744f5cc13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2MainScene\h">
+      <UniqueIdentifier>{2b22e5a8-701f-4746-ae16-af5387514f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3OverScene\cpp">
+      <UniqueIdentifier>{c63ac616-5e69-46c4-ae5f-ec95ba7c97b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3OverScene\h">
+      <UniqueIdentifier>{34526719-7916-48dd-baa4-a55e71d2c427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4ClearScene\cpp">
+      <UniqueIdentifier>{74fb16b5-ef74-48f6-bd52-0e83e65ada49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4ClearScene\h">
+      <UniqueIdentifier>{a488a58c-7a65-4434-b601-12b9ef38652a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DrawPixel.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="RemTask.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Selector.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ShoutingHockey.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Bumper.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="BG.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RemTask.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Selector.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Mover.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ShoutingHockey.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BG.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Bumper.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Fade.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
