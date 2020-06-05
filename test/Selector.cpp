@@ -14,13 +14,16 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Fade.h"
+#include "LoadScript.h"
 
+CStage *CS;
 
 /*************************************************
 * @brief タイトルクラス
 *************************************************/
 CTitle::CTitle() : nCount(0), bFade(false), MenuPos(MENU_FIRST)
 {
+	SH->NFadeList->DeleteTask();
 	new CNFade(FADEIN);
 }
 
@@ -36,6 +39,10 @@ bool CTitle::Move() {
 	else if (SH->Key[KEY_INPUT_DOWN] == 1 && MenuPos < MENU_MAX - 1) MenuPos++;
 	else if (SH->Key[KEY_INPUT_SPACE] == 1) {
 		SH->Key[KEY_INPUT_SPACE]++;
+
+		//! Fadeのnew前にDelete
+		SH->NFadeList->DeleteTask();
+		//! フェードアウト処理
 		new CNFade(FADEOUT);
 	}
 
@@ -43,8 +50,7 @@ bool CTitle::Move() {
 		SH->bSceneFlag = false;
 		switch (MenuPos) {
 		case MENU_FIRST:
-			//! フェードアウト処理
-			new CStage();
+			CS = new CStage(nStageNum);
 			return false;
 			break;
 		case MENU_SECOND:
@@ -83,17 +89,25 @@ void CTitle::Draw() {
 //=============================================================
 // ステージクラス
 //=============================================================
-CStage::CStage()
-	: Time(0)
+/*
+* @breaf 最初はFadeアウト
+*/
+CStage::CStage(int Num)
+	: Time(0), m_eLine(TOP), nIDCount(0), nAlphaID(-1)
 {
+	//! NFadeを消す前にSFadeをnew
+	//! SFadeはnewせずAlphaを変えてあげる
+	//CreateSFade();
+
 	//fadeの削除
-	//SH->NFadeList->DeleteTask();
+	SH->NFadeList->DeleteTask();
 
 	new CNFade(FADEIN);
-	new CBGStage1();
+	new CBGStage1(0);
 	new CSpownBumper();
+	SH->Script[Num]->Init();
+	SH->Script[Num]->Run();
 	new CSpownPortal();
-	new CSpownEnemy();
 	new CNormalPlayer(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, PI * -0.25);
 
 	//PlayMusic("Res\\Stage.mp3", DX_PLAYTYPE_LOOP);
@@ -101,6 +115,9 @@ CStage::CStage()
 
 //=============================================================
 bool CStage::Move() {
+	//if (nAlphaID >= 0)
+		//FadeOut();
+
 	Time++;
 
 	//! ゲームオーバー処理
@@ -118,11 +135,240 @@ bool CStage::Move() {
 	return true;
 }
 
+void CStage::FadeIn()
+{
+	int w = 0;
+	int h = 0;
+	bool bBreak = false;
+	while (true) {
+		if (nFadeCount[w][h] != 0) {
+			switch (m_eLine) {
+			case TOP:
+				w--;
+				nAlphaID--;
+				m_eLine = RIGHT;
+				break;
+
+			case RIGHT:
+				h--;
+				nAlphaID--;
+				m_eLine = BOTTOM;
+				break;
+
+			case BOTTOM:
+				w++;
+				nAlphaID--;
+				m_eLine = LEFT;
+				break;
+
+			case LEFT:
+				h++;
+				nAlphaID--;
+				m_eLine = TOP;
+				break;
+
+			}
+
+			// 通常通り進める
+			switch (m_eLine) {
+			case TOP:
+				w++;
+				nAlphaID++;
+				break;
+
+			case RIGHT:
+				h++;
+				nAlphaID++;
+				break;
+
+			case BOTTOM:
+				w--;
+				nAlphaID++;
+				break;
+
+			case LEFT:
+				h--;
+				nAlphaID++;
+				break;
+
+			}
+
+			//! 右に曲がっても1がある場合はいる
+			//! return Point
+			if (nFadeCount[w][h] != 0)
+				return;
+
+		}
+
+		//! 配列に数字を入れ
+		//! newする
+		nFadeCount[w][h] = 1;
+		new CSFade(w, h, nIDCount);
+
+
+		switch (m_eLine) {
+		case TOP:
+			w++;
+			nAlphaID++;
+			break;
+
+		case RIGHT:
+			h++;
+			nAlphaID++;
+			break;
+
+		case BOTTOM:
+			w--;
+			nAlphaID++;
+			break;
+
+		case LEFT:
+			h--;
+			nAlphaID++;
+			break;
+
+		}
+	}
+}
+
+void CStage::FadeOut()
+{
+	nAlphaID--;
+
+	if (nAlphaID <= 0) {
+		for (int x = 0; x < FADE_MAX; x++) {
+			for (int y = 0; y < FADE_MAX; y++) {
+				nFadeCount[x][y] = 0;	// 配列にゼロを入れていく
+			}
+		}
+	}
+}
+
+void CStage::CreateSFade()
+{
+	// 配列に数字を入れていく、配列を使っているか判定
+	// その配列数の場所にnew、その前にIDをふやす
+	// 前検知横（右）検知をしてどちらとも!= 0ならbreak;
+	for (int x = 0; x < FADE_MAX; x++) {
+		for (int y = 0; y < FADE_MAX; y++) {
+			nFadeCount[x][y] = 0;	// 配列にゼロを入れていく
+		}
+	}
+
+	int w = 0;
+	int h = 0;
+	bool bBreak = false;
+	while (true) {
+		if (nFadeCount[w][h] != 0) {
+			switch (m_eLine) {
+			case TOP:
+				w--;
+				nAlphaID--;
+				m_eLine = RIGHT;
+				break;
+
+			case RIGHT:
+				h--;
+				nAlphaID--;
+				m_eLine = BOTTOM;
+				break;
+
+			case BOTTOM:
+				w++;
+				nAlphaID--;
+				m_eLine = LEFT;
+				break;
+
+			case LEFT:
+				h++;
+				nAlphaID--;
+				m_eLine = TOP;
+				break;
+
+			}
+
+			// 通常通り進める
+			switch (m_eLine) {
+			case TOP:
+				w++;
+				nAlphaID++;
+				break;
+
+			case RIGHT:
+				h++;
+				nAlphaID++;
+				break;
+
+			case BOTTOM:
+				w--;
+				nAlphaID++;
+				break;
+
+			case LEFT:
+				h--;
+				nAlphaID++;
+				break;
+
+			}
+
+			//! 右に曲がっても1がある場合はいる
+			//! return Point
+			if (nFadeCount[w][h] != 0)
+				return;
+
+		}
+
+		//! 配列に数字を入れ
+		//! newする
+		nFadeCount[w][h] = 1;
+		new CSFade(w, h, nIDCount);
+
+
+		switch (m_eLine) {
+		case TOP:
+			w++;
+			nAlphaID++;
+			break;
+
+		case RIGHT:
+			h++;
+			nAlphaID++;
+			break;
+
+		case BOTTOM:
+			w--;
+			nAlphaID++;
+			break;
+
+		case LEFT:
+			h--;
+			nAlphaID++;
+			break;
+
+		}
+	}
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+CWait::CWait()
+{
+	SH->SceneList->DeleteTask();
+}
+
+bool CWait::Move() {
+	nStageNum++;
+	new CStage(nStageNum);
+	return false;
+}
+
 //--------------------------------------------------------------------------------------------
 
 CGOver::CGOver() : MenuPos(MENU_FIRST)
 {
 	//! ゲームシーンの使ったものを消す
+	SH->NFadeList->DeleteTask();
 	SH->BGList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
@@ -137,7 +383,7 @@ bool CGOver::Move() {
 		SH->Key[KEY_INPUT_SPACE]++;
 		switch (MenuPos) {
 		case MENU_FIRST:
-			new CStage();
+			new CStage(nStageNum);
 			return false;
 			break;
 
@@ -177,6 +423,7 @@ void CGOver::Draw() {
 CGCreal::CGCreal() : MenuPos(MENU_FIRST)
 {
 	//! ゲームシーンの使ったものを消す
+	SH->NFadeList->DeleteTask();
 	SH->BGList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
@@ -191,7 +438,7 @@ bool CGCreal::Move() {
 		SH->Key[KEY_INPUT_SPACE]++;
 		switch (MenuPos) {
 		case MENU_FIRST:
-			new CStage();
+			new CStage(nStageNum);
 			return false;
 			break;
 

@@ -15,14 +15,16 @@ class CSelector : public CMover
 protected:
 
 public:
+	int nStageNum;
+
 	//　コンストラクタ
-	CSelector() : CMover(SH->TitleList, 0, 0) {}
+	CSelector() : CMover(SH->SceneList, 0, 0), nStageNum(0) {}
 
 	void* operator new(size_t t) {
-		return operator_new(t, SH->TitleList);
+		return operator_new(t, SH->SceneList);
 	}
 	void operator delete(void* p) {
-		operator_delete(p, SH->TitleList);
+		operator_delete(p, SH->SceneList);
 	}
 
 };
@@ -59,6 +61,10 @@ public:
 //=============================================================
 //  @brief ステージクラス
 //=============================================================
+
+//フェードの配列カウント用
+#define FADE_MAX 24
+
 class CStage : public CSelector {
 
 protected:
@@ -67,11 +73,38 @@ protected:
 
 public:
 	// コンストラクタ
-	CStage();
+	CStage(int Num);
 
 	// 移動、描画
 	virtual bool Move();
+
+	int nAlphaID;
+
+private:
+	// SFade用配列
+	int nFadeCount[FADE_MAX][FADE_MAX];
+	// SFade用IDNumber
+	int nIDCount;
+
+	// CreateSFade関数
+	void CreateSFade();
+	void FadeIn();
+	void FadeOut();
+
+	CreateLine m_eLine;
 };
+extern CStage *CS;
+
+//==============================================================
+// @brief Stage遷移時の準備クラス
+//==============================================================
+class CWait : public CSelector {
+	CWait();
+
+	virtual bool Move();
+
+};
+
 
 //=============================================================
 //  @brief ゲームオーバークラス

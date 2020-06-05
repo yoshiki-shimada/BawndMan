@@ -22,14 +22,16 @@ class CPlayer :public CMover
 {
 private:
 	float fRad;
+	int nSDownCount;
+	float fSDown;
 
 protected:
 
 public:
-	int Dir;
 	float vx, vy;
 	float Speed;
-	float x, y;
+	float faccel;
+	float x, y;	
 
 	CPlayer(float x, float y, float dir);
 
@@ -66,6 +68,8 @@ private:
 	float *Disperse(float Pvx, float Pvy, float PVal);
 	// ポータルエリア内、ダメージを受けるエリア内にいるかどうか
 	int nInPortal;
+	// 当たり判定用
+	bool bHitportal;
 	//bool bSetPortal;
 
 public:

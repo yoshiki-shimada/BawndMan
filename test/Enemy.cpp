@@ -14,8 +14,8 @@
 //=============================================================
 // @burief コンストラクタ
 //=============================================================
-CZakoEnemy1::CZakoEnemy1(float x, float y, float speed)
-	: CEnemy(x, y, ZENEMY_CHIP_HARF, 5, 1, 100), Count(0), vx(0), vy(0), rad(0), Speed(speed), nNocCount(0)
+CZakoEnemy1::CZakoEnemy1(float x, float y)
+	: CEnemy(x, y, ZENEMY_CHIP_HARF, 4, 1, 100), Count(0), vx(0), vy(0), rad(0), Speed(1), nNocCount(0)
 {
 	SH->ECount++;
 }
@@ -95,5 +95,5 @@ void CZakoEnemy1::Draw() {
 }
 
 CSpownEnemy::CSpownEnemy() {
-	new CZakoEnemy1(600, 200, 1);
+	//new CZakoEnemy1(600, 200);
 }

@@ -7,12 +7,14 @@
 *************************************************/
 class CBGStage1 : public CMover
 {
+private:
+	int BGChipNum;
+
 protected:
-	
 
 public:
-	CBGStage1() : CMover(SH->BGList, 0, 0) {}
-	
+	CBGStage1(int ChipNum) : CMover(SH->BGList, 0, 0), BGChipNum(ChipNum) {}
+
 	void* operator new(size_t t) {
 		return operator_new(t, SH->BGList);
 	}

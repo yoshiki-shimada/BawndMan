@@ -2,8 +2,6 @@
 
 #include "Mover.h"
 
-//フェードの配列カウント用
-#define FADE_MAX 24
 
 /************************
 * @brief フェードクラス
@@ -26,7 +24,7 @@ public:
 private:
 	int nAlpha;
 	int nAlphaCount;
-	
+
 	FadePhase m_ePhase;
 
 };
@@ -37,7 +35,7 @@ private:
 class CSFade : public CMover
 {
 public:
-	CSFade(FadePhase m_Phase, int x, int y);
+	CSFade(int x, int y, int ID);
 
 	void* operator new(size_t t) {
 		return operator_new(t, SH->SFadeList);
@@ -50,8 +48,9 @@ public:
 	virtual void Draw();
 
 private:
-	int nFadeCount[FADE_MAX][FADE_MAX];
-	int nCount;
+	float X;
+	float Y;
+	int nID;
 
 	FadePhase m_ePhase;
 

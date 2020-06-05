@@ -20,14 +20,14 @@ protected:
 
 public:
 	// 耐久力、スコア
-	float Vit;
+	int Vit;
 	float Vx, Vy;
 	int Score;
 	int nAtack;
 	bool NockBackFlag;
 
 	// コンストラクタ
-	CEnemy(float x, float y, float r, float vit, int Atack, int score)
+	CEnemy(float x, float y, float r, int vit, int Atack, int score)
 		: CMover(SH->EnemyList, x, y, r), Time(0), Vit(vit), nAtack(Atack), Score(score), NockBackFlag(false)
 	{}
 
@@ -58,13 +58,13 @@ public:
 	float rad;
 
 	// コンストラクタ
-	CZakoEnemy1(float x, float y, float speed);
+	CZakoEnemy1(float x, float y);
 
 	// 移動、描画
 	virtual bool Move();
 	virtual void Draw();
 
-	//static CEnemy* New(float x,float y,float dir) { return new CZakoEnemy1(x, y, dir); }
+	static CEnemy* New(float x, float y) { return new CZakoEnemy1(x, y); }
 };
 
 

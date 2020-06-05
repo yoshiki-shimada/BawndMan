@@ -18,7 +18,7 @@
 * @brief コンストラクタ
 ******************************************************************/
 CPlayer::CPlayer(float x, float y, float dir) : CMover(SH->PlayerList, x, y, PLAYER_SIZE_HARF),
-Dir(MOVE_DIR_NORMAL), Speed(PLAYER_SPEED)
+Speed(PLAYER_SPEED), faccel(1.0), nSDownCount(0), fSDown(1.0)
 {
 	SH->Count = 0;
 	vx = cosf(dir) * Speed;
@@ -33,10 +33,17 @@ bool CPlayer::Move() {
 	static const int MinX = RLWALL_AND_PLAYER, MaxX = SCREEN_WIDTH - MinX;
 	static const int MinY = TBWALL_AND_PLAYER, MaxY = SCREEN_WIDTH - MinY;
 
+	if (nSDownCount <= 0)
+		fSDown = 1.0;
+	else {
+		fSDown = 0.6;
+		nSDownCount--;
+	}
+
 
 	//! 移動
-	X += vx;
-	Y += vy;
+	X += vx * faccel * fSDown;
+	Y += vy * faccel * fSDown;
 
 	//--------------------------------------------------------------
 	//! Bumperとの当たり判定
@@ -44,12 +51,7 @@ bool CPlayer::Move() {
 		CBumper *Bumper = (CBumper*)i.Next();
 		//! 当たったとき
 		if (CSHit(Bumper, Bumper->fRad, PLAYER_SIZE_HARF, PLAYER_SIZE_HARF)) {
-			if (Speed > 2) {
-				Speed--;
-				fRad = atan2(vy, vx);
-				vx = cosf(fRad) * Speed;
-				vy = sinf(fRad) * Speed;
-			}
+			nSDownCount += 10;
 		}
 	}
 	//--------------------------------------------------------------
@@ -57,22 +59,32 @@ bool CPlayer::Move() {
 	// 壁での反射判定
 	if (X < MinX && vx < 0) {
 		vx = -vx;
-		SH->Count++;
+		if (SH->Count < (PLAYER_PATTERN - 1)) {
+			SH->Count++;
+			faccel += 0.5;
+		}
 	}
 	if (Y < MinY && vy < 0) {
 		vy = -vy;
-		SH->Count++;
+		if (SH->Count < (PLAYER_PATTERN - 1)) {
+			SH->Count++;
+			faccel += 0.5;
+		}
 	}
 	if (X > MaxX && vx > 0) {
 		vx = -vx;
-		SH->Count++;
+		if (SH->Count < (PLAYER_PATTERN - 1)) {
+			SH->Count++;
+			faccel += 0.5;
+		}
 	}
 	if (Y > MaxY && vy > 0) {
 		vy = -vy;
-		SH->Count++;
+		if (SH->Count < (PLAYER_PATTERN - 1)) {
+			SH->Count++;
+			faccel += 0.5;
+		}
 	}
-	if (SH->Count > 3)
-		SH->Count = 3;
 
 	// 移動範囲の制限
 	if (X < MinX)
@@ -92,7 +104,7 @@ bool CPlayer::Move() {
 ******************************************************************/
 void CPlayer::Draw() {
 	DrawGraphF(X - (PLAYER_SIZE_HARF), Y - (PLAYER_SIZE_HARF),
-		SH->GHPlayer[(Dir * PLAYER_PATTERN) + SH->Count],
+		SH->GHPlayer[SH->Count],
 		TRUE
 	);
 }
@@ -101,7 +113,7 @@ void CPlayer::Draw() {
 * @brief player当たり判定等
 ******************************************************************/
 CNormalPlayer::CNormalPlayer(float x, float y, float dir)
-	: CPlayer(x, y, dir), nInPortal(0)
+	: CPlayer(x, y, dir), nInPortal(0), bHitportal(true)
 {
 }
 
@@ -124,12 +136,15 @@ bool CNormalPlayer::Move() {
 			nInPortal++;
 
 		// ポータルにセット
-		if (CCHit(Portal) && !Portal->bSetPortal) {
+		if (CCHit(Portal) && !Portal->bSetPortal && bHitportal) {
 			X = Portal->X;
 			Y = Portal->Y;
 			vx = 0;
 			vy = 0;
 			Portal->bSetPortal = true;
+			// リングの色を変更
+			// キャラのマップチップは0が青なので
+			Portal->nChipNam = SH->Count + 1;
 			//bSetPortal = true;
 		}
 		// 発射
@@ -137,11 +152,18 @@ bool CNormalPlayer::Move() {
 			if (SH->Key[KEY_INPUT_SPACE] == 1) {
 				vx = cosf(Portal->dPortaldir) * Speed;
 				vy = sinf(Portal->dPortaldir) * Speed;
+				//! 移動
+				X += vx * faccel;
+				Y += vy * faccel;
+				bHitportal = false;
+				// リングに入っていない状態の見た目に
+				Portal->nChipNam = NULL;
 			}
 		}
 		else if (!CCHit(Portal)) {
 			//bSetPortal = false;
 			Portal->bSetPortal = false;
+			bHitportal = true;
 		}
 	}
 
@@ -166,6 +188,10 @@ bool CNormalPlayer::Move() {
 			EPVal = atan2(Y - Enemy->Y, X - Enemy->X);
 			V1 = Disperse(vx, vy, PEVal);
 			V2 = Disperse(Enemy->Vx, Enemy->Vy, EPVal);
+
+			//----------------------------
+			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
+			//----------------------------
 			//! 行列計算
 			vx = *V1 + *(V2 + 2);
 			vy = *(V1 + 1) + *(V2 + 3);
@@ -174,13 +200,13 @@ bool CNormalPlayer::Move() {
 
 			// スピードを少し上げる
 			float fUpS = atan2(vy, vx);
-			vx = cosf(fUpS) * 1.5;
-			vy = sinf(fUpS) * 1.5;
+			vx = cosf(fUpS) * faccel;
+			vy = sinf(fUpS) * faccel;
 
 			//! 当たり判定のないところまでプレイヤーを移動
 			fatanZ = atan2(Y - Enemy->Y, X - Enemy->X);
-			X = (2 * PLAYER_SIZE_HARF + 15) * cos(fatanZ) + Enemy->X;
-			Y = (2 * PLAYER_SIZE_HARF + 15) * sin(fatanZ) + Enemy->Y;
+			X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy->X;
+			Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy->Y;
 
 			//! 連鎖
 
@@ -257,7 +283,7 @@ bool CRevivalMyShip::Move() {
 void CRevivalMyShip::Draw() {
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 122);
 	DrawGraphF(X - (PLAYER_SIZE_HARF), Y - (PLAYER_SIZE_HARF),
-		SH->GHPlayer[(Dir * PLAYER_PATTERN) + SH->Count],
+		SH->GHPlayer[SH->Count],
 		TRUE
 	);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

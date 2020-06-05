@@ -1,5 +1,6 @@
 #include "DxLib.h"
 #include "ShoutingHockey.h"
+#include "Selector.h"
 #include "Fade.h"
 
 /*
@@ -47,7 +48,7 @@ void CNFade::Draw() {
 	// “§‰ßˆ—
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, nAlpha);
 	// •`‰æˆ—
- 	DrawGraphF(0, 0,
+	DrawGraphF(0, 0,
 		SH->GHNFade,
 		TRUE
 	);
@@ -59,26 +60,26 @@ void CNFade::Draw() {
 /*
 * @brief ­‚µ•Ï‚í‚Á‚½ƒtƒF[ƒh
 */
-CSFade::CSFade(FadePhase m_Phase, int x, int y) : CMover(SH -> SFadeList, 0, 0), m_ePhase(m_Phase)
+CSFade::CSFade(int x, int y, int ID)
+	: CMover(SH -> SFadeList, 0, 0), X(x), Y(y), nID(ID)
 {
 }
 
 bool CSFade::Move() {
-	for (int x = FADE_MAX; x <= 0; x++) {
-		for (int y = FADE_MAX; y <= 0;) {
-			nCount++;
-			if (nCount >= 10) {
-				nCount = 0;
-			}
-		}
+
+	if (nID > CS->nAlphaID) {
+		return false;
 	}
+
 	return true;
 }
 
 void CSFade::Draw() {
 	// •`‰æˆ—
+	// Œ©‚¦‚é
 	DrawGraphF(FADE_SIZE_XY * X, FADE_SIZE_XY * Y,
 		SH->GHSFade,
 		TRUE
 	);
+
 }
