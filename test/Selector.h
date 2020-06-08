@@ -47,15 +47,13 @@ private:
 	bool bFade;
 
 public:
-	// メニュー項目の選択位置
-	int MenuPos;
 
 	// コンストラクタ
 	CTitle();
 
 	// 移動、描画
 	virtual bool Move();
-	virtual void Draw();
+	//virtual void Draw();
 };
 
 //=============================================================
@@ -97,9 +95,22 @@ extern CStage *CS;
 
 //==============================================================
 // @brief Stage遷移時の準備クラス
+// Waitはタスクを非共有
 //==============================================================
-class CWait : public CSelector {
-	CWait();
+class CWait : public CMover {
+private:
+	int nNum;
+	int nCount;
+
+public:
+	CWait(int Num);
+
+	void* operator new(size_t t) {
+		return operator_new(t, SH->WaitList);
+	}
+	void operator delete(void* p) {
+		operator_delete(p, SH->WaitList);
+	}
 
 	virtual bool Move();
 

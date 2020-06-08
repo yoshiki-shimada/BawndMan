@@ -8,12 +8,17 @@
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Selector.h"
+#include "TitleText.h"
 #include "BG.h"
 #include "Bumper.h"
 #include "Portal.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Enemy02.h"
+#include "Enemy03.h"
+#include "Enemy04.h"
 #include "Bullet.h"
+#include "UI.h"
 #include "Fade.h"
 #include "LoadScript.h"
 
@@ -21,21 +26,27 @@
 CShoutingHockey *SH;
 
 //! コンストラクタ
-CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false)
+CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), TitleMenuPos(MENU_FIRST)
 {
-	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_COLOR);
+	SetGraphMode(SCREEN_WIDTH_ANDUI, SCREEN_HEIGHT, SCREEN_COLOR);
 	ChangeWindowMode(TRUE);
 	DxLib_Init();
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// タスクリストの初期化
 	SceneList = new CRemTaskList(sizeof(CStage), 100);
+	TTextList = new CRemTaskList(sizeof(CTitleText), 10);
+	WaitList = new CRemTaskList(sizeof(CWait), 10);
 	BGList = new CRemTaskList(sizeof(CBGStage1), 10);
 	BumperList = new CRemTaskList(sizeof(CBumper), 10);
 	PortalList = new CRemTaskList(sizeof(CPortal), 100);
-	EnemyList = new CRemTaskList(sizeof(CZakoEnemy1), 100);
-	BulletList = new CRemTaskList(sizeof(CBullet), 100);
+	Enemy01List = new CRemTaskList(sizeof(CZakoEnemy1), 100);
+	Enemy02List = new CRemTaskList(sizeof(CZakoEnemy2), 100);
+	Enemy03List = new CRemTaskList(sizeof(CZakoEnemy3), 100);
+	Enemy04List = new CRemTaskList(sizeof(CZakoEnemy4), 100);
+	BulletList = new CRemTaskList(sizeof(CDirBullet), 100);
 	PlayerList = new CRemTaskList(sizeof(CNormalPlayer), 10);
+	UiList = new CRemTaskList(sizeof(CUI), 10);
 	NFadeList = new CRemTaskList(sizeof(CNFade), 10);
 	SFadeList = new CRemTaskList(sizeof(CSFade), 100);
 
@@ -47,6 +58,24 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false)
 		TITLE_SIZE_X, TITLE_SIZE_Y,
 		&GHTitle
 	);
+	//! text01
+	LoadDivGraph(TITLE_TEXT01, 1,
+		1, 1,
+		TEXT01_SIZE_X, TEXT01_SIZE_Y,
+		&GHText01
+	);
+	//! text01
+	LoadDivGraph(TITLE_TEXT02, 1,
+		1, 1,
+		TEXT02_SIZE_X, TEXT02_SIZE_Y,
+		&GHText02
+	);
+	LoadDivGraph(TITLE_YAJI, 1,
+		1, 1,
+		YAJI_SIZE_X, YAJI_SIZE_Y,
+		&GHYaji
+	);
+	//------------------------------------------------------
 	//! ステージの床
 	LoadDivGraph(BGSTAGEFLOOR, BG_PATTERN,
 		BG_PATTERN, 1,
@@ -71,16 +100,41 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false)
 		PLAYER_SIZE, PLAYER_SIZE,
 		GHPlayer
 	);
-	//! エネミー
-	LoadDivGraph(ZENEMY_CHIP, ZENEMY_PATTERN,
+	//! エネミー01
+	LoadDivGraph(ZENEMY_CHIP01, ZENEMY_PATTERN,
 		ZENEMY_PATTERN, 1,
 		ZENEMY_CHIP_SIZE_X, ZENEMY_CHIP_SIZE_Y,
-		GHZEnemy
+		GHZEnemy01
 	);
+	//! エネミー02
+	LoadDivGraph(ZENEMY_CHIP02, ZENEMY_PATTERN,
+		ZENEMY_PATTERN, 1,
+		ZENEMY_CHIP_SIZE_X, ZENEMY_CHIP_SIZE_Y,
+		GHZEnemy02
+	);
+	//! エネミー03
+	LoadDivGraph(ZENEMY_CHIP03, ZENEMY_PATTERN,
+		ZENEMY_PATTERN, 1,
+		ZENEMY_CHIP_SIZE_X, ZENEMY_CHIP_SIZE_Y,
+		GHZEnemy03
+	);
+	//! エネミー04
+	LoadDivGraph(ZENEMY_CHIP04, ZENEMY_PATTERN,
+		ZENEMY_PATTERN, 1,
+		ZENEMY_CHIP_SIZE_X, ZENEMY_CHIP_SIZE_Y,
+		GHZEnemy04
+	);
+	//! Bullet
 	LoadDivGraph(BULLET_CHIP, BULLET_PATTERN,
 		BULLET_PATTERN, 1,
 		BULLET_CHIP_SIZE_X, BULLET_CHIP_SIZE_Y,
 		GHBullet
+	);
+	//! Metar
+	LoadDivGraph(METAR_CHIP, METAR_PATTERN,
+		METAR_PATTERN, 1,
+		METAR_CHIP_SIZE_X, METAR_CHIP_SIZE_Y,
+		GHMetar
 	);
 	//! ノーマルフェード
 	LoadDivGraph(FADEBG, 1,
@@ -98,10 +152,12 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false)
 	//! サウンドハンドルの初期化
 
 	// スクリプト
-	Script[5] = {
-		new CLoadScript("Res\\Stage01Script.txt") 
+	Script[0] = new CLoadScript("Res\\Stage01Script.txt");
+	Script[1] = new CLoadScript("Res\\Stage02Script.txt");
+	Script[2] = new CLoadScript("Res\\Stage03Script.txt");
+	Script[3] = new CLoadScript("Res\\Stage04Script.txt");
+	Script[4] = new CLoadScript("Res\\Stage05Script.txt");
 
-	};
 }
 
 //! デストラクタ
@@ -147,13 +203,18 @@ void CShoutingHockey::Move() {
 		return;
 
 	MoveTask(SceneList);
+	MoveTask(TTextList);
+	MoveTask(WaitList);
 	MoveTask(BGList);
 	if (!bMoveFlag) {
 		MoveTask(BumperList);
 		MoveTask(PortalList);
 		MoveTask(BulletList);
 		MoveTask(PlayerList);
-		MoveTask(EnemyList);
+		MoveTask(Enemy01List);
+		MoveTask(Enemy02List);
+		MoveTask(Enemy03List);
+		MoveTask(Enemy04List);
 	}
 	MoveTask(NFadeList);
 	MoveTask(SFadeList);
@@ -164,12 +225,17 @@ void CShoutingHockey::Move() {
 ***************************************************************/
 void CShoutingHockey::Draw() {
 	DrawTask(SceneList);
+	DrawTask(TTextList);
 	DrawTask(BGList);
 	DrawTask(BumperList);
 	DrawTask(PortalList);
 	DrawTask(BulletList);
 	DrawTask(PlayerList);
-	DrawTask(EnemyList);
+	DrawTask(Enemy01List);
+	DrawTask(Enemy02List);
+	DrawTask(Enemy03List);
+	DrawTask(Enemy04List);
+	DrawTask(UiList);
 	DrawTask(NFadeList);
 	DrawTask(SFadeList);
 }
@@ -205,6 +271,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	//! ゲームの実行
 	SH->Run();
-	delete SH;
+	//delete SH;
 	return 0;
 }

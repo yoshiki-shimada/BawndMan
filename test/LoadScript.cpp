@@ -1,15 +1,34 @@
 #include "LoadScript.h"
 
 // ìGÇÃéÌóﬁÅiñºëOÅj
-const static char* ENEMY_NAME[] = {
-	"ZEnemy01"
+const static char* ENEMY_NAME01[] = {
+	"ZEnemy01"/*,"ZEnemy02","ZEnemy03","ZEnemy04"*/
 };
+const static char* ENEMY_NAME02[] = {
+	"ZEnemy02"
+};
+const static char* ENEMY_NAME03[] = {
+	"ZEnemy03"
+};
+const static char* ENEMY_NAME04[] = {
+	"ZEnemy04"
+};
+ 
 
 /*
 * @brief
 */
-const static NEW_ENEMY_FUNC ENEMY_FUNC[] = {
+const static NEW_ENEMY_FUNC01 ENEMY_FUNC01 = {
 	CZakoEnemy1::New
+};
+const static NEW_ENEMY_FUNC02 ENEMY_FUNC02 = {
+	CZakoEnemy2::New
+};
+const static NEW_ENEMY_FUNC03 ENEMY_FUNC03 = {
+	CZakoEnemy3::New
+};
+const static NEW_ENEMY_FUNC04 ENEMY_FUNC04 = {
+	CZakoEnemy4::New
 };
 
 const static NEW_PORTAL_FUNC PORTAL_FUNC = {
@@ -70,9 +89,24 @@ CLoadScript::CLoadScript(string file)
 		if (comment) continue;
 
 		if (command == "enemy") {
-			for (int i = 0, in = sizeof(ENEMY_NAME) / sizeof(char*); i < in; i++) {
-				if (param0 == ENEMY_NAME[i]) {
-					Command.push_back(new CEnemyCommand(ENEMY_FUNC[i], stof(param1), stof(param2)));
+			for (int i = 0, in = sizeof(ENEMY_NAME01) / sizeof(char*); i < in; i++) {
+				if (param0 == ENEMY_NAME01[i]) {
+					Command.push_back(new CEnemyCommand01(ENEMY_FUNC01, stof(param1), stof(param2)));
+				}
+			}
+			for (int i = 0, in = sizeof(ENEMY_NAME02) / sizeof(char*); i < in; i++) {
+				if (param0 == ENEMY_NAME02[i]) {
+					Command.push_back(new CEnemyCommand02(ENEMY_FUNC02, stof(param1), stof(param2)));
+				}
+			}
+			for (int i = 0, in = sizeof(ENEMY_NAME03) / sizeof(char*); i < in; i++) {
+				if (param0 == ENEMY_NAME03[i]) {
+					Command.push_back(new CEnemyCommand03(ENEMY_FUNC03, stof(param1), stof(param2)));
+				}
+			}
+			for (int i = 0, in = sizeof(ENEMY_NAME04) / sizeof(char*); i < in; i++) {
+				if (param0 == ENEMY_NAME04[i]) {
+					Command.push_back(new CEnemyCommand04(ENEMY_FUNC04, stof(param1), stof(param2)));
 				}
 			}
 		}

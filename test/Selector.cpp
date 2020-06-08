@@ -9,10 +9,12 @@
 #include "ShoutingHockey.h"
 #include "Selector.h"
 #include "BG.h"
+#include "TitleText.h"
 #include "Bumper.h"
 #include "Portal.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "UI.h"
 #include "Fade.h"
 #include "LoadScript.h"
 
@@ -21,10 +23,11 @@ CStage *CS;
 /*************************************************
 * @brief タイトルクラス
 *************************************************/
-CTitle::CTitle() : nCount(0), bFade(false), MenuPos(MENU_FIRST)
+CTitle::CTitle() : nCount(0), bFade(false)
 {
 	SH->NFadeList->DeleteTask();
 	new CNFade(FADEIN);
+	new CTitleText();
 }
 
 bool CTitle::Move() {
@@ -35,8 +38,8 @@ bool CTitle::Move() {
 	//ScreenFlip();
 	//i -= 2;
 
-	if (SH->Key[KEY_INPUT_UP] == 1 && MenuPos > 0) MenuPos--;
-	else if (SH->Key[KEY_INPUT_DOWN] == 1 && MenuPos < MENU_MAX - 1) MenuPos++;
+	if (SH->Key[KEY_INPUT_UP] == 1 && SH->TitleMenuPos > 0) SH->TitleMenuPos--;
+	else if (SH->Key[KEY_INPUT_DOWN] == 1 && SH->TitleMenuPos < MENU_MAX - 1) SH->TitleMenuPos++;
 	else if (SH->Key[KEY_INPUT_SPACE] == 1) {
 		SH->Key[KEY_INPUT_SPACE]++;
 
@@ -48,7 +51,7 @@ bool CTitle::Move() {
 
 	if (SH->bSceneFlag) {
 		SH->bSceneFlag = false;
-		switch (MenuPos) {
+		switch (SH->TitleMenuPos) {
 		case MENU_FIRST:
 			CS = new CStage(nStageNum);
 			return false;
@@ -64,25 +67,25 @@ bool CTitle::Move() {
 }
 
 //=============================================================
-void CTitle::Draw() {
-	DrawGraphF(0, 0,
-		SH->GHTitle,
-		FALSE
-	);
-	// 文字列の描画
-	DrawString(SCREEN_WIDTH * 0.5 - 45, SCREEN_HEIGHT / 2 - 30,
-		"ShoutingHockey",
-		(GetColor(255, 255, 255))
-	);
-	DrawString(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT / 2 + 20,
-		"スタート",
-		(MenuPos == MENU_FIRST ? GetColor(255, 0, 0) : GetColor(255, 255, 255))
-	);
-	DrawString(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 + 40,
-		"エンド",
-		(MenuPos == MENU_SECOND ? GetColor(255, 0, 0) : GetColor(255, 255, 255))
-	);
-}
+//void CTitle::Draw() {
+//	DrawGraphF(0, 0,
+//		SH->GHTitle,
+//		FALSE
+//	);
+//	// 文字列の描画
+//	DrawString(SCREEN_WIDTH * 0.5 - 45, SCREEN_HEIGHT / 2 - 30,
+//		"ShoutingHockey",
+//		(GetColor(255, 255, 255))
+//	);
+//	DrawString(SCREEN_WIDTH / 2 - 20, SCREEN_HEIGHT / 2 + 20,
+//		"スタート",
+//		(MenuPos == MENU_FIRST ? GetColor(255, 0, 0) : GetColor(255, 255, 255))
+//	);
+//	DrawString(SCREEN_WIDTH / 2 - 10, SCREEN_HEIGHT / 2 + 40,
+//		"エンド",
+//		(MenuPos == MENU_SECOND ? GetColor(255, 0, 0) : GetColor(255, 255, 255))
+//	);
+//}
 
 //--------------------------------------------------------------------------------------------
 
@@ -98,7 +101,7 @@ CStage::CStage(int Num)
 	//! NFadeを消す前にSFadeをnew
 	//! SFadeはnewせずAlphaを変えてあげる
 	//CreateSFade();
-
+	SH->TTextList->DeleteTask();
 	//fadeの削除
 	SH->NFadeList->DeleteTask();
 
@@ -109,6 +112,7 @@ CStage::CStage(int Num)
 	SH->Script[Num]->Run();
 	new CSpownPortal();
 	new CNormalPlayer(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, PI * -0.25);
+	new CUI();
 
 	//PlayMusic("Res\\Stage.mp3", DX_PLAYTYPE_LOOP);
 }
@@ -122,13 +126,23 @@ bool CStage::Move() {
 
 	//! ゲームオーバー処理
 	if (SH->Count <= -1) {
+		//! Fadeのnew前にDelete
+		SH->NFadeList->DeleteTask();
+		//! フェードアウト処理
+		new CNFade(FADEOUT);
 		new CGOver();
 		return false;
 	}
 
 	//! ゲームクリア処理
 	if (SH->ECount <= 0) {
-		new CGCreal();
+		//! Fadeのnew前にDelete
+		SH->NFadeList->DeleteTask();
+		//! フェードアウト処理
+		new CNFade(FADEOUT);
+		nStageNum++;
+		new CWait(nStageNum);
+		//new CGCreal();
 		return false;
 	}
 
@@ -352,15 +366,26 @@ void CStage::CreateSFade()
 
 //--------------------------------------------------------------------------------------------
 
-CWait::CWait()
+CWait::CWait(int Num) : CMover(SH->WaitList, 0, 0), nNum(Num), nCount(40)
 {
-	SH->SceneList->DeleteTask();
+	//new せず使いまわせるものは使いまわす。
+	//SH->NFadeList->DeleteTask();
+	SH->BGList->DeleteTask();
+	SH->BumperList->DeleteTask();
+	SH->PortalList->DeleteTask();
+	SH->Enemy01List->DeleteTask();
+	SH->PlayerList->DeleteTask();
 }
 
 bool CWait::Move() {
-	nStageNum++;
-	new CStage(nStageNum);
-	return false;
+	if (nCount < 0) {
+		//SH->SceneList->DeleteTask();
+		new CStage(nNum);
+		return false;
+	}
+	nCount--;
+
+	return true;
 }
 
 //--------------------------------------------------------------------------------------------
@@ -369,10 +394,11 @@ CGOver::CGOver() : MenuPos(MENU_FIRST)
 {
 	//! ゲームシーンの使ったものを消す
 	SH->NFadeList->DeleteTask();
+	//SH->SceneList->DeleteTask();
 	SH->BGList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
-	SH->EnemyList->DeleteTask();
+	SH->Enemy01List->DeleteTask();
 	SH->PlayerList->DeleteTask();
 }
 
@@ -427,7 +453,7 @@ CGCreal::CGCreal() : MenuPos(MENU_FIRST)
 	SH->BGList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
-	SH->EnemyList->DeleteTask();
+	SH->Enemy01List->DeleteTask();
 	SH->PlayerList->DeleteTask();
 }
 

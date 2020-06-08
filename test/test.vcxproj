@@ -152,8 +152,11 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Bumper.cpp" />
     <ClCompile Include="BG.cpp" />
+    <ClCompile Include="Enemy02.cpp" />
     <ClCompile Include="DrawPixel.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Enemy03.cpp" />
+    <ClCompile Include="Enemy04.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="LoadScript.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -161,12 +164,17 @@
     <ClCompile Include="RemTask.cpp" />
     <ClCompile Include="Selector.cpp" />
     <ClCompile Include="ShoutingHockey.cpp" />
+    <ClCompile Include="TitleText.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BG.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Bumper.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Enemy02.h" />
+    <ClInclude Include="Enemy03.h" />
+    <ClInclude Include="Enemy04.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="LoadScript.h" />
     <ClInclude Include="Mover.h" />
@@ -175,6 +183,8 @@
     <ClInclude Include="RemTask.h" />
     <ClInclude Include="Selector.h" />
     <ClInclude Include="ShoutingHockey.h" />
+    <ClInclude Include="TitleText.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

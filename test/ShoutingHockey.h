@@ -14,6 +14,8 @@ class CLoadScript;
 //! スクリーンサイズ
 #define SCREEN_WIDTH	864
 #define SCREEN_HEIGHT	864
+//! スクリーンの横幅は黒い部分を設けるのでこれを引数に
+#define SCREEN_WIDTH_ANDUI	1064
 //! 一応色
 #define SCREEN_COLOR	32
 
@@ -34,6 +36,22 @@ class CLoadScript;
 #define TITLEBG	"res\\TitleBG.png"
 #define TITLE_SIZE_X  864
 #define TITLE_SIZE_Y  864
+
+//! Text,yaji
+#define TITLE_TEXT01 "res\\START.png"
+#define TITLE_TEXT02 "res\\EXIT.png"
+#define TEXT_POS_Y_0 550
+#define TEXT_POS_Y_1 700
+#define TEXT01_SIZE_X 396
+#define TEXT01_SIZE_Y 119
+#define TEXT02_SIZE_X 293
+#define TEXT02_SIZE_Y 116
+#define TEXT_HARFHARF_Y 28.5
+
+#define TITLE_YAJI "res\\yaji.png"
+#define YAJI_SIZE_X 59
+#define YAJI_SIZE_Y 67
+
 
 //--------------------------------------------------------
 
@@ -60,29 +78,38 @@ enum BGPhase {
 //! プレイヤー
 #define PLAYER_CHIP	"res\\Player.png"
 #define PLAYER_PATTERN 4
-#define PLAYER_SIZE 71
-#define PLAYER_SIZE_HARF 35.5
+#define PLAYER_SIZE 55
+#define PLAYER_SIZE_HARF 27.5
 
 //! リング
 #define PORTAL "res\\PortalChip.png"
-#define PORTAL_SIZE 171
-#define PORTAL_SIZE_HARF 85.5
+#define PORTAL_SIZE 136
+#define PORTAL_SIZE_HARF 68
 // 当たり判定用
-#define PORTAL_SIZE_HARFCOLLI 55
+#define PORTAL_SIZE_HARFCOLLI 50
 #define PORTAL_PATTERN 5
 
-#define ZENEMY_CHIP	"res\\ZEnemy1.png"
+#define ZENEMY_CHIP01	"res\\ZEnemy1.png"
+#define ZENEMY_CHIP02	"res\\ZEnemy1.png"
+#define ZENEMY_CHIP03	"res\\ZEnemy1.png"
+#define ZENEMY_CHIP04	"res\\ZEnemy1.png"
 #define ZENEMY_PATTERN 4
-#define ZENEMY_CHIP_SIZE_X 69
-#define ZENEMY_CHIP_SIZE_Y 85
-#define ZENEMY_CHIP_HARF 35
+#define ZENEMY_CHIP_SIZE_X 53
+#define ZENEMY_CHIP_SIZE_Y 65
+#define ZENEMY_CHIP_HARF 28
 //#define ZENEMY_SE "res\\SE_Crash.wav"
 
-#define BULLET_CHIP	"Res\\Bullet.png"
-#define BULLET_PATTERN 4
+#define BULLET_CHIP	"res\\Bullet.png"
+#define BULLET_PATTERN 8
 #define BULLET_CHIP_SIZE_X 8
 #define BULLET_CHIP_SIZE_Y 8
+#define BULLET_CHIP_SIZE_HARF 4
 #define BULLET_SE "Res\\SE_Bullet.wav"
+
+#define METAR_CHIP "res\\MeterChip.png"
+#define METAR_PATTERN 5
+#define METAR_CHIP_SIZE_X 199
+#define METAR_CHIP_SIZE_Y 253
 
 enum FadePhase {
 	FADEIN = 0,
@@ -120,17 +147,26 @@ public:
 	bool bSceneFlag;
 	// ステージ移動時の背景用
 	BGPhase m_ePhase;
+	// メニュー項目の選択位置
+	int TitleMenuPos;
 
 	//! グラフィックハンドル
 	int GHTitle = 0;
+	int GHText01 = 0;
+	int GHText02 = 0;
+	int GHYaji = 0;
 	int GHNFade = 0;
 	int GHSFade = 0;
 	int GHStageFloor[BG_PATTERN] = { 0 };
 	int GHBumper = 0;
 	int GHPlayer[PLAYER_PATTERN] = { 0 };
-	int GHZEnemy[ZENEMY_PATTERN] = { 0 };
+	int GHZEnemy01[ZENEMY_PATTERN] = { 0 };
+	int GHZEnemy02[ZENEMY_PATTERN] = { 0 };
+	int GHZEnemy03[ZENEMY_PATTERN] = { 0 };
+	int GHZEnemy04[ZENEMY_PATTERN] = { 0 };
 	int GHBullet[BULLET_PATTERN] = { 0 };
 	int GHPortal[PORTAL_PATTERN] = { 0 };
+	int GHMetar[METAR_PATTERN] = { 0 };
 
 	//! サウンドハンドル
 
@@ -148,7 +184,9 @@ public:
 	virtual void Draw();
 
 	//! タスクリスト
-	CRemTaskList *SceneList, *NFadeList, *SFadeList, *BGList, *BumperList, *PlayerList, *EnemyList, *BulletList, *PortalList;
+	CRemTaskList *SceneList, *WaitList, *NFadeList, *SFadeList, *BGList,
+		*BumperList, *PlayerList, *Enemy01List, *Enemy02List,
+		*Enemy03List, *Enemy04List, *BulletList, *PortalList, *UiList, *TTextList;
 	void MoveTask(CRemTaskList* list);
 	void DrawTask(CRemTaskList* list);
 

@@ -1,0 +1,1 @@
+enemy ZEnemy01 432 20

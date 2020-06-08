@@ -5,6 +5,9 @@
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Enemy.h"
+#include "Enemy02.h"
+#include "Enemy03.h"
+#include "Enemy04.h"
 #include "Portal.h"
 #include "Bumper.h"
 
@@ -43,19 +46,76 @@ public:
 };
 
 
-// 敵生成用関数へのポインタ
-typedef CEnemy* (*NEW_ENEMY_FUNC)(float x, float y);
+// Blue敵生成用関数へのポインタ
+typedef CEnemy* (*NEW_ENEMY_FUNC01)(float x, float y);
 
 /*
-* @brief 敵生成コマンドクラス
+* @brief Blue敵生成コマンドクラス
 */
-class CEnemyCommand : public CCommand {
+class CEnemyCommand01 : public CCommand {
 
-	NEW_ENEMY_FUNC Func;
+	NEW_ENEMY_FUNC01 Func;
 	float X, Y;
 
 public:
-	CEnemyCommand(NEW_ENEMY_FUNC func, float x, float y)
+	CEnemyCommand01(NEW_ENEMY_FUNC01 func, float x, float y)
+		: Func(func), X(x), Y(y)
+	{}
+	virtual void Run() { Func(X, Y); }
+
+};
+
+// Green敵生成用関数へのポインタ
+typedef CEnemy02* (*NEW_ENEMY_FUNC02)(float x, float y);
+
+/*
+* @brief Green敵生成コマンドクラス
+*/
+class CEnemyCommand02 : public CCommand {
+
+	NEW_ENEMY_FUNC02 Func;
+	float X, Y;
+
+public:
+	CEnemyCommand02(NEW_ENEMY_FUNC02 func, float x, float y)
+		: Func(func), X(x), Y(y)
+	{}
+	virtual void Run() { Func(X, Y); }
+
+};
+
+// Yellow敵生成用関数へのポインタ
+typedef CEnemy03* (*NEW_ENEMY_FUNC03)(float x, float y);
+
+/*
+* @brief Yellow敵生成コマンドクラス
+*/
+class CEnemyCommand03 : public CCommand {
+
+	NEW_ENEMY_FUNC03 Func;
+	float X, Y;
+
+public:
+	CEnemyCommand03(NEW_ENEMY_FUNC03 func, float x, float y)
+		: Func(func), X(x), Y(y)
+	{}
+	virtual void Run() { Func(X, Y); }
+
+};
+
+// Red敵生成用関数へのポインタ
+typedef CEnemy04* (*NEW_ENEMY_FUNC04)(float x, float y);
+
+/*
+* @brief Red敵生成コマンドクラス
+*/
+class CEnemyCommand04 : public CCommand {
+
+	NEW_ENEMY_FUNC04 Func;
+	float X, Y;
+
+public:
+	CEnemyCommand04(NEW_ENEMY_FUNC04 func, float x, float y)
 		: Func(func), X(x), Y(y)
 	{}
 	virtual void Run() { Func(X, Y); }

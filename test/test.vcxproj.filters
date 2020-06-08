@@ -87,6 +87,21 @@
     <ClCompile Include="LoadScript.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy02.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy03.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy04.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleText.cpp">
+      <Filter>1TitleScene\cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RemTask.h">
@@ -124,6 +139,21 @@
     </ClInclude>
     <ClInclude Include="LoadScript.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy02.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy03.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy04.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleText.h">
+      <Filter>1TitleScene\h</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

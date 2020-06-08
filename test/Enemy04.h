@@ -12,7 +12,7 @@
 /****************
 * @brief 敵描画関連クラス
 ****************/
-class CEnemy : public CMover {
+class CEnemy04 : public CMover {
 
 protected:
 	// タイマー
@@ -24,12 +24,19 @@ public:
 	float Vx, Vy;
 	int Score;
 	int nAtack;
-	bool NockBackFlag;
 
 	// コンストラクタ
-	CEnemy(float x, float y, float r, int vit, int Atack, int score)
-		: CMover(SH->Enemy01List, x, y, r), Vit(vit), nAtack(Atack), Score(score), NockBackFlag(false)
+	CEnemy04(float x, float y, float r, int vit, int Atack, int score)
+		: CMover(SH->Enemy01List, x, y, r), Vit(vit), nAtack(Atack), Score(score)
 	{}
+
+
+	void* operator new(size_t t) {
+		return operator_new(t, SH->Enemy04List);
+	}
+	void operator delete(void* p) {
+		operator_delete(p, SH->Enemy04List);
+	}
 
 };
 
@@ -38,47 +45,26 @@ public:
 //-------------------------------------------------------------
 #define ZENEMY_ANIM_SPEED 5
 
+
 //=============================================================
 // ブルー敵クラス
-// ぶつかってくる
-// ノックバックしてデリート
+// 一定間隔で全方向放射弾を飛ばしてくる
 //=============================================================
-class CZakoEnemy1 : public CEnemy {
+class CZakoEnemy4 : public CEnemy04 {
 private:
-	float vx, vy;
-	float Speed;
-	int Count;
-	int nNocCount;
-	float *V1, *V2, Valx, Valy;
-	//! 衝突時移動用
-	float fatanZ;
-	//! 値を返すため
-	float V3[2];
-	float SV0, SV1, SV2;
-	float UVal2;
-	float kakuSA;
-	float Vxs, Vys;
-
-	void Ref(float Ex, float Ey);
-	float *Disperse(float Pvx, float Pvy, float PVal);
+	float fBulletSpeed;
+	int nCount;
 
 public:
 	float rad;
 
 	// コンストラクタ
-	CZakoEnemy1(float x, float y);
+	CZakoEnemy4(float x, float y);
 
-
-	void* operator new(size_t t) {
-		return operator_new(t, SH->Enemy01List);
-	}
-	void operator delete(void* p) {
-		operator_delete(p, SH->Enemy01List);
-	}
 
 	// 移動、描画
 	virtual bool Move();
 	virtual void Draw();
 
-	static CEnemy* New(float x, float y) { return new CZakoEnemy1(x, y); }
+	static CEnemy04* New(float x, float y) { return new CZakoEnemy4(x, y); }
 };

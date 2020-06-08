@@ -31,7 +31,7 @@ public:
 	float vx, vy;
 	float Speed;
 	float faccel;
-	float x, y;	
+	float x, y;
 
 	CPlayer(float x, float y, float dir);
 
@@ -65,12 +65,13 @@ private:
 	float Vxs, Vys;
 	//! 衝突時移動用
 	float fatanZ;
-	float *Disperse(float Pvx, float Pvy, float PVal);
 	// ポータルエリア内、ダメージを受けるエリア内にいるかどうか
 	int nInPortal;
 	// 当たり判定用
 	bool bHitportal;
 	//bool bSetPortal;
+
+	float *Disperse(float Pvx, float Pvy, float PVal);
 
 public:
 	// playerの攻撃値

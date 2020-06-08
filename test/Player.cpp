@@ -9,6 +9,10 @@
 #include "ShoutingHockey.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Enemy02.h"
+#include "Enemy03.h"
+#include "Enemy04.h"
+#include "Bullet.h"
 #include "Portal.h"
 #include "Bumper.h"
 #include <math.h>
@@ -167,27 +171,74 @@ bool CNormalPlayer::Move() {
 		}
 	}
 
-	//! 敵との当たり判定
-	for (CRemTaskIter i(SH->EnemyList); i.HasNext();) {
-		CEnemy *Enemy = (CEnemy*)i.Next();
+
+
+	//! Enemy01との当たり判定
+	for (CRemTaskIter i(SH->Enemy01List); i.HasNext();) {
+		CZakoEnemy1 *Enemy01 = (CZakoEnemy1*)i.Next();
 		//! 当たった時
-		if (CCHit(Enemy)) {
+		if (CCHit(Enemy01)) {
 			// ポータルにセットされているとき
 			if (nInPortal > 0) {
-				SH->Count -= Enemy->nAtack;
+				SH->Count -= Enemy01->nAtack;
+
+				PEVal = atan2(Enemy01->Y - Y, Enemy01->X - X);
+				EPVal = atan2(Y - Enemy01->Y, X - Enemy01->X);
+				V1 = Disperse(vx, vy, PEVal);
+				V2 = Disperse(Enemy01->Vx, Enemy01->Vy, EPVal);
+
+				Enemy01->Vx = -(*(V1 + 2) + *V2);
+				Enemy01->Vy = -(*(V1 + 3) + *(V2 + 1));
+				
 			}
 			// ポータルにセットされてないとき
 			else {
-				Enemy->Vit -= 1 + SH->Count;
+				Enemy01->Vit -= 1 + SH->Count;
+
+				//! 反射
+				PEVal = atan2(Enemy01->Y - Y, Enemy01->X - X);
+				EPVal = atan2(Y - Enemy01->Y, X - Enemy01->X);
+				V1 = Disperse(vx, vy, PEVal);
+				V2 = Disperse(Enemy01->Vx, Enemy01->Vy, EPVal);
+
+				//----------------------------
+				// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
+				//----------------------------
+				//! 行列計算
+				vx = *V1 + *(V2 + 2);
+				vy = *(V1 + 1) + *(V2 + 3);
+				Enemy01->Vx = -(*(V1 + 2) + *V2);
+				Enemy01->Vy = -(*(V1 + 3) + *(V2 + 1));
+
+				// スピードを少し上げる
+				float fUpS = atan2(vy, vx);
+				vx = cosf(fUpS) * faccel;
+				vy = sinf(fUpS) * faccel;
+
+				//! 当たり判定のないところまでプレイヤーを移動
+				fatanZ = atan2(Y - Enemy01->Y, X - Enemy01->X);
+				X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy01->X;
+				Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy01->Y;
+
 			}
 
 			//! 跳ね返る
-			Enemy->NockBackFlag = true;
+			Enemy01->NockBackFlag = true;
 
-			PEVal = atan2(Enemy->Y - Y, Enemy->X - X);
-			EPVal = atan2(Y - Enemy->Y, X - Enemy->X);
+		}
+	}
+	//! Enemy02との当たり判定
+	for (CRemTaskIter i(SH->Enemy02List); i.HasNext();) {
+		CZakoEnemy2 *Enemy02 = (CZakoEnemy2*)i.Next();
+		//! 当たった時
+		if (CCHit(Enemy02)) {
+			Enemy02->Vit -= 1 + SH->Count;
+
+			//! 反射
+			PEVal = atan2(Enemy02->Y - Y, Enemy02->X - X);
+			EPVal = atan2(Y - Enemy02->Y, X - Enemy02->X);
 			V1 = Disperse(vx, vy, PEVal);
-			V2 = Disperse(Enemy->Vx, Enemy->Vy, EPVal);
+			V2 = Disperse(Enemy02->Vx, Enemy02->Vy, EPVal);
 
 			//----------------------------
 			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
@@ -195,8 +246,6 @@ bool CNormalPlayer::Move() {
 			//! 行列計算
 			vx = *V1 + *(V2 + 2);
 			vy = *(V1 + 1) + *(V2 + 3);
-			Enemy->Vx = -(*(V1 + 2) + *V2);
-			Enemy->Vy = -(*(V1 + 3) + *(V2 + 1));
 
 			// スピードを少し上げる
 			float fUpS = atan2(vy, vx);
@@ -204,14 +253,89 @@ bool CNormalPlayer::Move() {
 			vy = sinf(fUpS) * faccel;
 
 			//! 当たり判定のないところまでプレイヤーを移動
-			fatanZ = atan2(Y - Enemy->Y, X - Enemy->X);
-			X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy->X;
-			Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy->Y;
-
-			//! 連鎖
+			fatanZ = atan2(Y - Enemy02->Y, X - Enemy02->X);
+			X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy02->X;
+			Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy02->Y;
 
 		}
 	}
+	//! Enemy03との当たり判定
+	for (CRemTaskIter i(SH->Enemy03List); i.HasNext();) {
+		CZakoEnemy3 *Enemy03 = (CZakoEnemy3*)i.Next();
+		//! 当たった時
+		if (CCHit(Enemy03)) {
+			Enemy03->Vit -= 1 + SH->Count;
+
+			//! 反射
+			PEVal = atan2(Enemy03->Y - Y, Enemy03->X - X);
+			EPVal = atan2(Y - Enemy03->Y, X - Enemy03->X);
+			V1 = Disperse(vx, vy, PEVal);
+			V2 = Disperse(Enemy03->Vx, Enemy03->Vy, EPVal);
+
+			//----------------------------
+			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
+			//----------------------------
+			//! 行列計算
+			vx = *V1 + *(V2 + 2);
+			vy = *(V1 + 1) + *(V2 + 3);
+
+			// スピードを少し上げる
+			float fUpS = atan2(vy, vx);
+			vx = cosf(fUpS) * faccel;
+			vy = sinf(fUpS) * faccel;
+
+			//! 当たり判定のないところまでプレイヤーを移動
+			fatanZ = atan2(Y - Enemy03->Y, X - Enemy03->X);
+			X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy03->X;
+			Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy03->Y;
+
+		}
+	}
+	//! Enemy04との当たり判定
+	for (CRemTaskIter i(SH->Enemy04List); i.HasNext();) {
+		CZakoEnemy4 *Enemy04 = (CZakoEnemy4*)i.Next();
+		//! 当たった時
+		if (CCHit(Enemy04)) {
+			Enemy04->Vit -= 1 + SH->Count;
+
+			//! 反射
+			PEVal = atan2(Enemy04->Y - Y, Enemy04->X - X);
+			EPVal = atan2(Y - Enemy04->Y, X - Enemy04->X);
+			V1 = Disperse(vx, vy, PEVal);
+			V2 = Disperse(Enemy04->Vx, Enemy04->Vy, EPVal);
+
+			//----------------------------
+			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
+			//----------------------------
+			//! 行列計算
+			vx = *V1 + *(V2 + 2);
+			vy = *(V1 + 1) + *(V2 + 3);
+
+			// スピードを少し上げる
+			float fUpS = atan2(vy, vx);
+			vx = cosf(fUpS) * faccel;
+			vy = sinf(fUpS) * faccel;
+
+			//! 当たり判定のないところまでプレイヤーを移動
+			fatanZ = atan2(Y - Enemy04->Y, X - Enemy04->X);
+			X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy04->X;
+			Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy04->Y;
+
+		}
+	}
+
+
+	//! バレットとの当たり判定
+	for (CRemTaskIter i(SH->BulletList); i.HasNext();) {
+		CBullet *Bullet = (CBullet*)i.Next();
+		//! 当たった時
+		if (CCHit(Bullet)) {
+			SH->Count -= Bullet->nAtack;
+			Bullet->nDefCount -= 2;
+
+		}
+	}
+
 
 	//// 爆発
 	//if (Vit <= 0) {
@@ -223,6 +347,7 @@ bool CNormalPlayer::Move() {
 
 	return true;
 }
+
 
 /*
 * @brief 反射用関数

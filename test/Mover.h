@@ -46,7 +46,7 @@ public:
 	virtual bool Move() { return true; }
 	virtual void Draw() {}
 
-	// 画面外に出たかどうかの判定処理
+	// 壁の判定処理都思ったけど一つにそれ以上の当たり判定が多すぎるので使わん
 	bool Out(float size) {
 		return (
 			X < (0 - size) || X >(SCREEN_WIDTH + size) ||
