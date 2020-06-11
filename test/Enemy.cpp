@@ -12,6 +12,7 @@
 #include "Enemy04.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Effect.h"
 #include <math.h>
 
 
@@ -58,7 +59,7 @@ bool CZakoEnemy1::Move() {
 	}
 
 	X += vx;
-	Y += vy;
+ 	Y += vy;
 
 	//! ï«Ç≈ÇÃîΩéÀîªíË
 	if (X < MinX && vx < 0)
@@ -76,7 +77,7 @@ bool CZakoEnemy1::Move() {
 	for (CRemTaskIter i(SH->Enemy02List); i.HasNext();) {
 		CZakoEnemy2 *Enemy02 = (CZakoEnemy2*)i.Next();
 		//! ìñÇΩÇ¡ÇΩéû
-		if (CCHit(Enemy02) & NockBackFlag) {
+		if (CCHit(Enemy02) && NockBackFlag) {
 			Enemy02->Vit -= nAtack;
 
 			Ref(Enemy02->X, Enemy02->Y);
@@ -85,16 +86,16 @@ bool CZakoEnemy1::Move() {
 	for (CRemTaskIter i(SH->Enemy03List); i.HasNext();) {
 		CZakoEnemy3 *Enemy03 = (CZakoEnemy3*)i.Next();
 		//! ìñÇΩÇ¡ÇΩéû
-		if (CCHit(Enemy03) & NockBackFlag) {
+		if (CCHit(Enemy03) && NockBackFlag) {
 			Enemy03->Vit -= nAtack;
 
 			Ref(Enemy03->X, Enemy03->Y);
 		}
 	}
-	for (CRemTaskIter i(SH->Enemy01List); i.HasNext();) {
+	for (CRemTaskIter i(SH->Enemy04List); i.HasNext();) {
 		CZakoEnemy4 *Enemy04 = (CZakoEnemy4*)i.Next();
 		//! ìñÇΩÇ¡ÇΩéû
-		if (CCHit(Enemy04) & NockBackFlag) {
+		if (CCHit(Enemy04) && NockBackFlag) {
 			Enemy04->Vit -= nAtack;
 
 			Ref(Enemy04->X, Enemy04->Y);
@@ -102,8 +103,8 @@ bool CZakoEnemy1::Move() {
 	}
 
 	//! è¡Ç∑
-	if (Vit <= 0) {
-		//new CEnemyCrash(X, Y);
+	if (Vit <= 0 && !NockBackFlag) {
+		new CEnemyCrash(X, Y);
 		SH->ECount--;
 		return false;
 	}

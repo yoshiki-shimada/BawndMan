@@ -6,6 +6,7 @@
 #define BUMPER_POS 45
 #define BUMPER_HARF_X BUMPER_SIZE_X * 0.5
 #define BUMPER_HARF_Y BUMPER_SIZE_Y * 0.5
+#define BUMPER_ANIM_SPEED 5
 
 /*************************************************
 * @brief ステージクラス
@@ -13,6 +14,7 @@
 class CBumper : public CMover
 {
 private:
+	int nCount;
 
 public:
 	float fRad;

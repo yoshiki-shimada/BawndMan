@@ -19,6 +19,7 @@
 #include "Enemy04.h"
 #include "Bullet.h"
 #include "UI.h"
+#include "Effect.h"
 #include "Fade.h"
 #include "LoadScript.h"
 
@@ -46,6 +47,7 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 	Enemy04List = new CRemTaskList(sizeof(CZakoEnemy4), 100);
 	BulletList = new CRemTaskList(sizeof(CDirBullet), 100);
 	PlayerList = new CRemTaskList(sizeof(CNormalPlayer), 10);
+	EffectList = new CRemTaskList(sizeof(CPlayerCrash), 10);
 	UiList = new CRemTaskList(sizeof(CUI), 10);
 	NFadeList = new CRemTaskList(sizeof(CNFade), 10);
 	SFadeList = new CRemTaskList(sizeof(CSFade), 100);
@@ -83,10 +85,10 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 		GHStageFloor
 	);
 	//! バンパー
-	LoadDivGraph(BUMPER, 1,
-		1, 1,
+	LoadDivGraph(BUMPER, BUMPER_PATTERN,
+		BUMPER_PATTERN, 1,
 		BUMPER_SIZE_X, BUMPER_SIZE_Y,
-		&GHBumper
+		GHBumper
 	);
 	//! ポータル
 	LoadDivGraph(PORTAL, PORTAL_PATTERN,
@@ -136,6 +138,16 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 		METAR_CHIP_SIZE_X, METAR_CHIP_SIZE_Y,
 		GHMetar
 	);
+	LoadDivGraph(CRASH_CHIP, CRASH_PATTERN,
+		CRASH_PATTERN, 1,
+		CRASH_CHIP_SIZE_X, CRASH_CHIP_SIZE_Y,
+		GHPCrash
+	);
+	LoadDivGraph(CRASH_CHIP, CRASH_PATTERN,
+		CRASH_PATTERN, 1,
+		CRASH_CHIP_SIZE_X, CRASH_CHIP_SIZE_Y,
+		GHECrash
+	);
 	//! ノーマルフェード
 	LoadDivGraph(FADEBG, 1,
 		1, 1,
@@ -152,7 +164,8 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 	//! サウンドハンドルの初期化
 
 	// スクリプト
-	Script[0] = new CLoadScript("Res\\Stage01Script.txt");
+	//Script[0] = new CLoadScript("Res\\Stage01Script.txt");
+	Script[0] = new CLoadScript("Res\\StagePromoScript.txt");
 	Script[1] = new CLoadScript("Res\\Stage02Script.txt");
 	Script[2] = new CLoadScript("Res\\Stage03Script.txt");
 	Script[3] = new CLoadScript("Res\\Stage04Script.txt");
@@ -216,6 +229,7 @@ void CShoutingHockey::Move() {
 		MoveTask(Enemy03List);
 		MoveTask(Enemy04List);
 	}
+	MoveTask(EffectList);
 	MoveTask(NFadeList);
 	MoveTask(SFadeList);
 }
@@ -236,6 +250,7 @@ void CShoutingHockey::Draw() {
 	DrawTask(Enemy03List);
 	DrawTask(Enemy04List);
 	DrawTask(UiList);
+	DrawTask(EffectList);
 	DrawTask(NFadeList);
 	DrawTask(SFadeList);
 }

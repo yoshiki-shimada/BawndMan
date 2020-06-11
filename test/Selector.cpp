@@ -138,6 +138,7 @@ bool CStage::Move() {
 	if (SH->ECount <= 0) {
 		//! Fadeのnew前にDelete
 		SH->NFadeList->DeleteTask();
+		SH->m_ePhase = End;
 		//! フェードアウト処理
 		new CNFade(FADEOUT);
 		nStageNum++;
@@ -380,6 +381,7 @@ CWait::CWait(int Num) : CMover(SH->WaitList, 0, 0), nNum(Num), nCount(40)
 bool CWait::Move() {
 	if (nCount < 0) {
 		//SH->SceneList->DeleteTask();
+		SH->m_ePhase = Run;
 		new CStage(nNum);
 		return false;
 	}

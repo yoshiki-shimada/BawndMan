@@ -31,6 +31,13 @@ public:
 		: CMover(SH->Enemy01List, x, y, r), Vit(vit), nAtack(Atack), Score(score), NockBackFlag(false)
 	{}
 
+	void* operator new(size_t t) {
+		return operator_new(t, SH->Enemy01List);
+	}
+	void operator delete(void* p) {
+		operator_delete(p, SH->Enemy01List);
+	}
+
 };
 
 //-------------------------------------------------------------
@@ -67,14 +74,6 @@ public:
 
 	// コンストラクタ
 	CZakoEnemy1(float x, float y);
-
-
-	void* operator new(size_t t) {
-		return operator_new(t, SH->Enemy01List);
-	}
-	void operator delete(void* p) {
-		operator_delete(p, SH->Enemy01List);
-	}
 
 	// 移動、描画
 	virtual bool Move();

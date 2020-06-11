@@ -152,6 +152,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Bumper.cpp" />
     <ClCompile Include="BG.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy02.cpp" />
     <ClCompile Include="DrawPixel.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="BG.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Bumper.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy02.h" />
     <ClInclude Include="Enemy03.h" />

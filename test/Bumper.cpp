@@ -6,12 +6,14 @@
 /*****************************************
 * @brief バンパークラス
 *****************************************/
-CBumper::CBumper(float x, float y, float rad) : CMover(SH->BumperList, x, y, BUMPER_HARF_X, BUMPER_HARF_Y), fRad(rad)
+CBumper::CBumper(float x, float y, float rad) : CMover(SH->BumperList, x, y, BUMPER_HARF_X, BUMPER_HARF_Y), fRad(rad), nCount(0)
 {
 }
 
 bool CBumper::Move()
 {
+	nCount++;
+
 	return true;
 }
 
@@ -20,7 +22,7 @@ void CBumper::Draw()
 {
 	// バンパー
 	DrawRotaGraph(X, Y, 1.0, fRad,
-		SH->GHBumper,
+		SH->GHBumper[(nCount / BUMPER_ANIM_SPEED) % BUMPER_PATTERN],
 		TRUE);
 }
 

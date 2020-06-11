@@ -157,6 +157,8 @@ bool CNormalPlayer::Move() {
 				vx = cosf(Portal->dPortaldir) * Speed;
 				vy = sinf(Portal->dPortaldir) * Speed;
 				//! 移動
+				//X += vx;
+				//Y += vy;
 				X += vx * faccel;
 				Y += vy * faccel;
 				bHitportal = false;
@@ -181,6 +183,7 @@ bool CNormalPlayer::Move() {
 			// ポータルにセットされているとき
 			if (nInPortal > 0) {
 				SH->Count -= Enemy01->nAtack;
+				faccel -= 0.5f;
 
 				PEVal = atan2(Enemy01->Y - Y, Enemy01->X - X);
 				EPVal = atan2(Y - Enemy01->Y, X - Enemy01->X);
@@ -189,7 +192,7 @@ bool CNormalPlayer::Move() {
 
 				Enemy01->Vx = -(*(V1 + 2) + *V2);
 				Enemy01->Vy = -(*(V1 + 3) + *(V2 + 1));
-				
+
 			}
 			// ポータルにセットされてないとき
 			else {
@@ -217,8 +220,8 @@ bool CNormalPlayer::Move() {
 
 				//! 当たり判定のないところまでプレイヤーを移動
 				fatanZ = atan2(Y - Enemy01->Y, X - Enemy01->X);
-				X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Enemy01->X;
-				Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Enemy01->Y;
+				X = (2 * PLAYER_SIZE_HARF + 30) * cos(fatanZ) + Enemy01->X;
+				Y = (2 * PLAYER_SIZE_HARF + 30) * sin(fatanZ) + Enemy01->Y;
 
 			}
 
@@ -331,8 +334,9 @@ bool CNormalPlayer::Move() {
 		//! 当たった時
 		if (CCHit(Bullet)) {
 			SH->Count -= Bullet->nAtack;
+			// オーバーで数値を引く
 			Bullet->nDefCount -= 2;
-
+			faccel -= 0.5f;
 		}
 	}
 

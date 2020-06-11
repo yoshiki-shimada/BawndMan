@@ -9,6 +9,7 @@
 #include "Enemy03.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Effect.h"
 #include <math.h>
 
 //=============================================================
@@ -25,19 +26,19 @@ CZakoEnemy3::CZakoEnemy3(float x, float y)
 //=============================================================
 bool CZakoEnemy3::Move() {
 
-	if (nCount / 50 == 0) {
+	if (nCount / 200 == 0) {
 		CRemTaskIter i(SH->PlayerList);
 		CPlayer *player = (CPlayer*)i.Next();
 		rad = atan2(player->Y - Y, player->X - X);
 		// íeÇÃê∂ê¨
-		new CDirBullet(X, Y, rad, 5.0f, 1.2f, 2, 1);
+		new CDirBullet(X, Y, rad, 1.0f, 1.0f, 2, 1);
 		nCount = 0;
 	}
 	nCount++;
 
 	//! è¡Ç∑
 	if (Vit <= 0) {
-		//new CEnemyCrash(X, Y);
+		new CEnemyCrash(X, Y);
 		SH->ECount--;
 		return false;
 	}

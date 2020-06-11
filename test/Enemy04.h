@@ -27,7 +27,7 @@ public:
 
 	// コンストラクタ
 	CEnemy04(float x, float y, float r, int vit, int Atack, int score)
-		: CMover(SH->Enemy01List, x, y, r), Vit(vit), nAtack(Atack), Score(score)
+		: CMover(SH->Enemy04List, x, y, r), Vit(vit), nAtack(Atack), Score(score)
 	{}
 
 

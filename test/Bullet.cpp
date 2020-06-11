@@ -10,14 +10,13 @@
 CDirBullet::CDirBullet(float x, float y, float dir, float spd, float accel, int Def, int Atack)
 	: CBullet(x, y, Def, Atack)
 {
-	float c = cosf(DegToRad * dir), s = sinf(DegToRad * dir);
 	// 速度
-	vx = spd * c;
-	vy = spd * s;
+	vx = cosf(dir) * spd;
+	vy = sinf(dir) * spd;
 
 	// 加速度
-	AX = accel * c;
-	AY = accel * s;
+	AX = accel;
+	AY = accel;
 }
 
 //=============================================================
@@ -29,9 +28,9 @@ bool CDirBullet::Move() {
 	X += vx;
 	Y += vy;
 
-	// 速度の更新
-	vx += AX;
-	vy += AY;
+	//// 速度の更新
+	//vx += AX;
+	//vy += AY;
 
 	// 当たり判定
 	//! 壁での反射判定

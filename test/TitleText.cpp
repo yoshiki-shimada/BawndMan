@@ -21,15 +21,15 @@ void CTitleText::Draw()
 	);
 	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5)), TEXT_POS_Y_0,
 		SH->GHText01,
-		FALSE
+		TRUE
 	);
 	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT02_SIZE_X * 0.5)), TEXT_POS_Y_1,
 		SH->GHText02,
-		FALSE
+		TRUE
 	);
 	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5) - YAJI_SIZE_X), fYajiY + TEXT_HARFHARF_Y,
 		SH->GHYaji,
-		FALSE
+		TRUE
 	);
 
 }

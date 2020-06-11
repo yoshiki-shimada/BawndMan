@@ -102,6 +102,9 @@
     <ClCompile Include="TitleText.cpp">
       <Filter>1TitleScene\cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RemTask.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="TitleText.h">
       <Filter>1TitleScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>2MainScene\h</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

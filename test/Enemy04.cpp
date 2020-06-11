@@ -9,6 +9,7 @@
 #include "Enemy04.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Effect.h"
 #include <math.h>
 
 
@@ -26,11 +27,11 @@ CZakoEnemy4::CZakoEnemy4(float x, float y)
 //=============================================================
 bool CZakoEnemy4::Move() {
 
-	if (nCount / 50 == 0) {
+	if (nCount / 200 == 0) {
 		// íeÇÃê∂ê¨
 		for (int r = 0.0f; r < 20; r++) {
 			rad = (int)rand() % 360;
-			new CDirBullet(X, Y, rad, 5.0f, 1.2f, 1, 2);
+			new CDirBullet(X, Y, rad, 1.2f, 1.2f, 1, 2);
 		}
 		nCount = 0;
 	}
@@ -38,7 +39,7 @@ bool CZakoEnemy4::Move() {
 
 	//! è¡Ç∑
 	if (Vit <= 0) {
-		//new CEnemyCrash(X, Y);
+		new CEnemyCrash(X, Y);
 		SH->ECount--;
 		return false;
 	}
