@@ -15,6 +15,8 @@
 #include "Bullet.h"
 #include "Portal.h"
 #include "Bumper.h"
+#include "NextArrow.h"
+#include "Effect.h"
 #include <math.h>
 
 
@@ -24,7 +26,7 @@
 CPlayer::CPlayer(float x, float y, float dir) : CMover(SH->PlayerList, x, y, PLAYER_SIZE_HARF),
 Speed(PLAYER_SPEED), faccel(1.0), nSDownCount(0), fSDown(1.0)
 {
-	SH->Count = 0;
+	SH->Count = 1;
 	vx = cosf(dir) * Speed;
 	vy = -sinf(dir) * Speed;
 }
@@ -56,6 +58,13 @@ bool CPlayer::Move() {
 		//! 当たったとき
 		if (CSHit(Bumper, Bumper->fRad, PLAYER_SIZE_HARF, PLAYER_SIZE_HARF)) {
 			nSDownCount += 10;
+		}
+	}
+	//! NextArrowとの当たり判定
+	for (CRemTaskIter i(SH->ArrowList); i.HasNext();) {
+		CNextArrow *Arrow = (CNextArrow*)i.Next();
+		if (CSHit(Arrow, PLAYER_SIZE_HARF, PLAYER_SIZE_HARF)) {
+			SH->m_eStagePhase = StageClear;
 		}
 	}
 	//--------------------------------------------------------------
@@ -117,7 +126,7 @@ void CPlayer::Draw() {
 * @brief player当たり判定等
 ******************************************************************/
 CNormalPlayer::CNormalPlayer(float x, float y, float dir)
-	: CPlayer(x, y, dir), nInPortal(0), bHitportal(true)
+	: CPlayer(x, y, dir), nInPortal(0), bHitportal(true), fUpS(0.0f)
 {
 }
 
@@ -128,7 +137,7 @@ bool CNormalPlayer::Move() {
 	// 自機に共通の移動処理
 	CPlayer::Move();
 
-	//! nPortalの初期化
+	//! nPortalの初期化（毎フレーム）
 	nInPortal = 0;
 
 	//! Bumperは移動との兼ね合いがあるため上に書きます。
@@ -136,43 +145,103 @@ bool CNormalPlayer::Move() {
 	for (CRemTaskIter i(SH->PortalList); i.HasNext();) {
 		CPortal *Portal = (CPortal*)i.Next();
 		// ポータル内にいるかどうか
-		if (CCHit(Portal))
-			nInPortal++;
-
-		// ポータルにセット
-		if (CCHit(Portal) && !Portal->bSetPortal && bHitportal) {
-			X = Portal->X;
-			Y = Portal->Y;
-			vx = 0;
-			vy = 0;
-			Portal->bSetPortal = true;
-			// リングの色を変更
-			// キャラのマップチップは0が青なので
-			Portal->nChipNam = SH->Count + 1;
-			//bSetPortal = true;
-		}
-		// 発射
-		else if (CCHit(Portal) && Portal->bSetPortal) {
-			if (SH->Key[KEY_INPUT_SPACE] == 1) {
-				vx = cosf(Portal->dPortaldir) * Speed;
-				vy = sinf(Portal->dPortaldir) * Speed;
-				//! 移動
-				//X += vx;
-				//Y += vy;
-				X += vx * faccel;
-				Y += vy * faccel;
-				bHitportal = false;
-				// リングに入っていない状態の見た目に
-				Portal->nChipNam = NULL;
+		if (CCHit(Portal)) {
+			// すでにセットされている
+			if (Portal->bSetPortal) {
+				nInPortal++;
+				//Portal->m_ePortal = NOTREFPORTAL;
+			}
+			else {
+				//// セットされておらずバンパー状態の時
+				//if (Portal->bRefPortal)
+				//	Portal->m_ePortal = REFPORTAL;
 			}
 		}
-		else if (!CCHit(Portal)) {
-			//bSetPortal = false;
-			Portal->bSetPortal = false;
-			bHitportal = true;
+
+		switch (Portal->m_ePortal)
+		{
+			// バンパー状態の処理
+		case REFPORTAL:
+			if (CCHit(Portal)) {
+				Portal->SetHit();
+				//! 反射
+				PEVal = atan2(Portal->Y - Y, Portal->X - X);
+				EPVal = atan2(Y - Portal->Y, X - Portal->X);
+				SteyVx = cosf(EPVal) * Speed;
+				SteyVy = sinf(EPVal) * Speed;
+				V1 = Disperse(vx, vy, PEVal);
+				V2 = Disperse(SteyVx, SteyVy, EPVal);
+
+				//----------------------------
+				// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
+				//----------------------------
+				//! 行列計算
+				vx = *V1 + *(V2 + 2);
+				vy = *(V1 + 1) + *(V2 + 3);
+
+				// スピードを少し上げる
+				fUpS = atan2(vy, vx);
+				vx = cosf(fUpS) * faccel;
+				vy = sinf(fUpS) * faccel;
+
+				//! 当たり判定のないところまでプレイヤーを移動
+				fatanZ = atan2(Y - Portal->Y, X - Portal->X);
+				X = (2 * PLAYER_SIZE_HARF + 20) * cos(fatanZ) + Portal->X;
+				Y = (2 * PLAYER_SIZE_HARF + 20) * sin(fatanZ) + Portal->Y;
+			}
+			break;
+
+		case NOTREFPORTAL:
+			// ポータルにセット
+			if (CCHit(Portal) && !Portal->bSetPortal && bHitportal) {
+				X = Portal->X;
+				Y = Portal->Y;
+				vx = 0;
+				vy = 0;
+				Portal->bSetPortal = true;
+				bHitportal = false;
+				// リングの色を変更
+				// キャラのマップチップは0が青なので
+				Portal->nChipNam = SH->Count;
+				//bSetPortal = true;
+			}
+			// 発射
+			else if (CCHit(Portal) && Portal->bSetPortal) {
+				if (SH->Key[KEY_INPUT_SPACE] == 1) {
+					vx = cosf(Portal->dPortaldir) * Speed;
+					vy = sinf(Portal->dPortaldir) * Speed;
+					//! 移動
+					//X += vx;
+					//Y += vy;
+					X += vx * faccel;
+					Y += vy * faccel;
+					bHitportal = false;
+					// リングに入っていない状態の見た目に
+					Portal->nChipNam = NULL;
+				}
+			}
+			// ポータルに当たっていない
+			else if (!CCHit(Portal)) {
+				//bSetPortal = false;
+				Portal->bSetPortal = false;
+				bHitportal = true;
+			}
+			break;
+
 		}
+
 	}
 
+
+	//! バンパーへの切替
+	if (bHitportal) {
+		if (SH->Key[KEY_INPUT_RETURN] == 1) {
+			for (CRemTaskIter i(SH->PortalList); i.HasNext();) {
+				CPortal *Portal = (CPortal*)i.Next();
+				Portal->CheckRefPortal();
+			}
+		}
+	}
 
 
 	//! Enemy01との当たり判定
@@ -196,7 +265,7 @@ bool CNormalPlayer::Move() {
 			}
 			// ポータルにセットされてないとき
 			else {
-				Enemy01->Vit -= 1 + SH->Count;
+				Enemy01->Vit -= SH->Count;
 
 				//! 反射
 				PEVal = atan2(Enemy01->Y - Y, Enemy01->X - X);
@@ -214,7 +283,7 @@ bool CNormalPlayer::Move() {
 				Enemy01->Vy = -(*(V1 + 3) + *(V2 + 1));
 
 				// スピードを少し上げる
-				float fUpS = atan2(vy, vx);
+				fUpS = atan2(vy, vx);
 				vx = cosf(fUpS) * faccel;
 				vy = sinf(fUpS) * faccel;
 
@@ -240,8 +309,10 @@ bool CNormalPlayer::Move() {
 			//! 反射
 			PEVal = atan2(Enemy02->Y - Y, Enemy02->X - X);
 			EPVal = atan2(Y - Enemy02->Y, X - Enemy02->X);
+			SteyVx = cosf(EPVal) * Speed;
+			SteyVy = sinf(EPVal) * Speed;
 			V1 = Disperse(vx, vy, PEVal);
-			V2 = Disperse(Enemy02->Vx, Enemy02->Vy, EPVal);
+			V2 = Disperse(SteyVx, SteyVy, EPVal);
 
 			//----------------------------
 			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
@@ -251,7 +322,7 @@ bool CNormalPlayer::Move() {
 			vy = *(V1 + 1) + *(V2 + 3);
 
 			// スピードを少し上げる
-			float fUpS = atan2(vy, vx);
+			fUpS = atan2(vy, vx);
 			vx = cosf(fUpS) * faccel;
 			vy = sinf(fUpS) * faccel;
 
@@ -272,8 +343,10 @@ bool CNormalPlayer::Move() {
 			//! 反射
 			PEVal = atan2(Enemy03->Y - Y, Enemy03->X - X);
 			EPVal = atan2(Y - Enemy03->Y, X - Enemy03->X);
+			SteyVx = cosf(EPVal) * Speed;
+			SteyVy = sinf(EPVal) * Speed;
 			V1 = Disperse(vx, vy, PEVal);
-			V2 = Disperse(Enemy03->Vx, Enemy03->Vy, EPVal);
+			V2 = Disperse(SteyVx, SteyVy, EPVal);
 
 			//----------------------------
 			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
@@ -283,7 +356,7 @@ bool CNormalPlayer::Move() {
 			vy = *(V1 + 1) + *(V2 + 3);
 
 			// スピードを少し上げる
-			float fUpS = atan2(vy, vx);
+			fUpS = atan2(vy, vx);
 			vx = cosf(fUpS) * faccel;
 			vy = sinf(fUpS) * faccel;
 
@@ -304,8 +377,10 @@ bool CNormalPlayer::Move() {
 			//! 反射
 			PEVal = atan2(Enemy04->Y - Y, Enemy04->X - X);
 			EPVal = atan2(Y - Enemy04->Y, X - Enemy04->X);
+			SteyVx = cosf(EPVal) * Speed;
+			SteyVy = sinf(EPVal) * Speed;
 			V1 = Disperse(vx, vy, PEVal);
-			V2 = Disperse(Enemy04->Vx, Enemy04->Vy, EPVal);
+			V2 = Disperse(SteyVx, SteyVy, EPVal);
 
 			//----------------------------
 			// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
@@ -315,7 +390,7 @@ bool CNormalPlayer::Move() {
 			vy = *(V1 + 1) + *(V2 + 3);
 
 			// スピードを少し上げる
-			float fUpS = atan2(vy, vx);
+			fUpS = atan2(vy, vx);
 			vx = cosf(fUpS) * faccel;
 			vy = sinf(fUpS) * faccel;
 
@@ -340,21 +415,23 @@ bool CNormalPlayer::Move() {
 		}
 	}
 
+	//! エラー防止
+	if (SH->Count <= 0)
+		SH->Count = 0;
 
-	//// 爆発
-	//if (Vit <= 0) {
-	//	new CMyShipCrash(X, Y);
-	//  DeletePlayer();
-	//	DeleteBeam();
-	//	return false;
-	//}
+	// 爆発
+	if (SH->Count == 0) {
+		new CPlayerCrash(X, Y);
+		//DeletePlayer();
+		return false;
+	}
 
 	return true;
 }
 
 
 /*
-* @brief 反射用関数
+* @brief 反射用関数 速度分解
 */
 float *CNormalPlayer::Disperse(float Uxs, float Uys, float UVal1)
 {

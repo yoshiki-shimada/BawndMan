@@ -135,3 +135,17 @@ public:
 	virtual void Run() { Func(X, Y, DIR); }
 
 };
+
+typedef CBumper* (*NEW_BUMPER_FUNC)(float x, float y, float rad);
+
+class CBumperCommand :public CCommand {
+	NEW_BUMPER_FUNC Func;
+	float X, Y, RAD;
+
+public:
+	CBumperCommand(NEW_BUMPER_FUNC func, float x, float y, float rad)
+		: Func(func), X(x), Y(y), RAD(rad)
+	{}
+	virtual void Run() { Func(X, Y, RAD); }
+
+};

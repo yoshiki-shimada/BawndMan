@@ -61,14 +61,15 @@ public:
 	//! 自分のWHの指定をする場合（大きさが変わる時に書くべき）
 
 	//! 四角の当たり判定
-	bool CSHit(CMover* m) {
+	// wh指定
+	bool CSHit(CMover* m, float w, float h) {
 		return (
-			(X - W) < (m->X + m->W) && (X + W) > (m->X - m->W) &&
-			(Y - H) < (m->Y + m->H) && (Y + H) > (m->Y - m->H)
+			(X - w) < (m->X + m->W) && (X + w) > (m->X - m->W) &&
+			(Y - h) < (m->Y + m->H) && (Y + h) > (m->Y - m->H)
 			);
 	}
 	//! 自分のWHの指定をする,当る対象が回転しているものがある時
-	bool CSHit(CMover* m,float fRad, float w, float h) {
+	bool CSHit(CMover* m, float fRad, float w, float h) {
 		//! 90度回転している場合
 		if (fRad == PI_HARF) {
 			return (

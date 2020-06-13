@@ -16,7 +16,7 @@
 // @burief グリーン,コンストラクタ
 //=============================================================
 CZakoEnemy2::CZakoEnemy2(float x, float y)
-	: CEnemy02(x, y, ZENEMY_CHIP_HARF, 4, 1, 100), nCount(0), rad(0), fBulletSpeed(1)
+	: CEnemy02(x, y, ZENEMY_CHIP_HARF, 2, 1, 100), nCount(0), rad(0), fBulletSpeed(1)
 {
 	SH->ECount++;
 }
@@ -40,6 +40,10 @@ bool CZakoEnemy2::Move() {
 	if (Vit <= 0) {
 		new CEnemyCrash(X, Y);
 		SH->ECount--;
+		//! ゲームクリア処理
+		if (SH->ECount <= 0) {
+			SH->m_eStagePhase = NextStage;
+		}
 		return false;
 	}
 

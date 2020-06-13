@@ -105,6 +105,9 @@
     <ClCompile Include="Effect.cpp">
       <Filter>2MainScene\cpp</Filter>
     </ClCompile>
+    <ClCompile Include="NextArrow.cpp">
+      <Filter>2MainScene\cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RemTask.h">
@@ -159,6 +162,9 @@
       <Filter>1TitleScene\h</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
+      <Filter>2MainScene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="NextArrow.h">
       <Filter>2MainScene\h</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,4 +18,3 @@ public:
 	// •`‰æ
 	virtual void Draw();
 };
-

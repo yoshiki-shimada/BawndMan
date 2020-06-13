@@ -41,6 +41,10 @@ bool CZakoEnemy4::Move() {
 	if (Vit <= 0) {
 		new CEnemyCrash(X, Y);
 		SH->ECount--;
+		//! ƒQ[ƒ€ƒNƒŠƒAˆ—
+		if (SH->ECount <= 0) {
+			SH->m_eStagePhase = NextStage;
+		}
 		return false;
 	}
 

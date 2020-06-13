@@ -59,8 +59,7 @@ class CLoadScript;
 //! 両サイドのはみだし画像サイズ　22
 enum BGPhase {
 	Run,
-	End,
-	State
+	End
 };
 
 #define BGSTAGEFLOOR	"res\\Game_BG_Chip.png"
@@ -70,6 +69,13 @@ enum BGPhase {
 #define TBWALL_AND_PLAYER 55
 #define BG_PATTERN 3
 
+//! Arrow
+#define ARROW_CHIP "res\\arrow.png"
+#define ARROW_SIZE_X 93
+#define ARROW_SIZE_Y 96
+#define ARROW_SIZE_HARF 48
+#define ARROW_PATTERN 3
+
 //! バンパー	230x13
 #define BUMPER	"res\\Bumper.png"
 #define BUMPER_SIZE_X  246
@@ -78,7 +84,7 @@ enum BGPhase {
 
 //! プレイヤー
 #define PLAYER_CHIP	"res\\Player.png"
-#define PLAYER_PATTERN 4
+#define PLAYER_PATTERN 5
 #define PLAYER_SIZE 55
 #define PLAYER_SIZE_HARF 27.5
 
@@ -88,7 +94,9 @@ enum BGPhase {
 #define PORTAL_SIZE_HARF 68
 // 当たり判定用
 #define PORTAL_SIZE_HARFCOLLI 50
-#define PORTAL_PATTERN 5
+#define PORTAL_PATTERN 10
+#define PORTAL_PATTERN_X 5
+#define PORTAL_PATTERN_Y 2
 
 #define ZENEMY_CHIP01	"res\\ZEnemy1.png"
 #define ZENEMY_CHIP02	"res\\ZEnemy2.png"
@@ -113,11 +121,15 @@ enum BGPhase {
 #define METAR_CHIP_SIZE_Y 253
 
 //-------------------------------------------------------------
-#define CRASH_CHIP	"Res\\ZEnemyExpl.png"
-//#define CRASH_CHIP	"Res\\.png"
-#define CRASH_PATTERN 6
-#define CRASH_CHIP_SIZE_X 64
-#define CRASH_CHIP_SIZE_Y 64
+#define ECRASH_CHIP	"Res\\ZEnemyExpl.png"
+#define ECRASH_PATTERN 6
+#define ECRASH_CHIP_SIZE 64
+#define PCRASH_CHIP	"Res\\CharaEffect.png"
+#define PCRASH_PATTERN 5
+#define PCRASH_CHIP_SIZE 72
+#define PORTAL_EFFECT_CHIP "Res\\RingEffect.png"
+#define PORTAL_EFFECT_PATTERN 7
+#define PORTAL_EFFECT_SIZE 72
 
 enum FadePhase {
 	FADEIN = 0,
@@ -129,6 +141,14 @@ enum CreateLine {
 	RIGHT,
 	BOTTOM,
 	LEFT
+};
+
+enum StagePhase {
+	RunStage,
+	GameOver,
+	NextStage,
+	StageClear,
+	GameClear
 };
 
 /*
@@ -158,6 +178,8 @@ public:
 	// メニュー項目の選択位置
 	int TitleMenuPos;
 
+	StagePhase m_eStagePhase;
+
 	//! グラフィックハンドル
 	int GHTitle = 0;
 	int GHText01 = 0;
@@ -175,8 +197,10 @@ public:
 	int GHBullet[BULLET_PATTERN] = { 0 };
 	int GHPortal[PORTAL_PATTERN] = { 0 };
 	int GHMetar[METAR_PATTERN] = { 0 };
-	int GHPCrash[CRASH_PATTERN] = { 0 };
-	int GHECrash[CRASH_PATTERN] = { 0 };
+	int GHArrow[ARROW_PATTERN] = { 0 };
+	int GHPCrash[PCRASH_PATTERN] = { 0 };
+	int GHECrash[ECRASH_PATTERN] = { 0 };
+	int GHPortalEffect[PORTAL_EFFECT_PATTERN] = { 0 };
 
 	//! サウンドハンドル
 
@@ -197,7 +221,7 @@ public:
 	CRemTaskList *SceneList, *WaitList, *NFadeList, *SFadeList, *BGList,
 		*BumperList, *PlayerList, *Enemy01List, *Enemy02List,
 		*Enemy03List, *Enemy04List, *BulletList, *PortalList, *UiList,
-		*TTextList, *EffectList;
+		*TTextList, *EffectList, *ArrowList;
 	void MoveTask(CRemTaskList* list);
 	void DrawTask(CRemTaskList* list);
 

@@ -20,7 +20,7 @@
 // @burief ブルー,コンストラクタ
 //=============================================================
 CZakoEnemy1::CZakoEnemy1(float x, float y)
-	: CEnemy(x, y, ZENEMY_CHIP_HARF, 4, 1, 100), Count(0), vx(0), vy(0), rad(0), Speed(1), nNocCount(0)
+	: CEnemy(x, y, ZENEMY_CHIP_HARF, 1, 1, 100), Count(0), vx(0), vy(0), rad(0), Speed(1), nNocCount(0)
 {
 	SH->ECount++;
 }
@@ -106,6 +106,10 @@ bool CZakoEnemy1::Move() {
 	if (Vit <= 0 && !NockBackFlag) {
 		new CEnemyCrash(X, Y);
 		SH->ECount--;
+		//! ゲームクリア処理
+		if (SH->ECount <= 0) {
+			SH->m_eStagePhase = NextStage;
+		}
 		return false;
 	}
 

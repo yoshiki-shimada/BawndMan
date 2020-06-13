@@ -63,13 +63,15 @@ private:
 	float UVal2;
 	float kakuSA;
 	float Vxs, Vys;
+	float SteyVx, SteyVy;
 	//! 衝突時移動用
 	float fatanZ;
 	// ポータルエリア内、ダメージを受けるエリア内にいるかどうか
 	int nInPortal;
-	// 当たり判定用
+	// 当たり判定用 trueあたっていない　falseあたっている
 	bool bHitportal;
-	//bool bSetPortal;
+	//! 反射時のスピード調整用
+	float fUpS;
 
 	float *Disperse(float Pvx, float Pvy, float PVal);
 

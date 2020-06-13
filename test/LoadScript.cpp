@@ -1,19 +1,22 @@
 #include "LoadScript.h"
 
 // ìGÇÃéÌóﬁÅiñºëOÅj
-const static char* ENEMY_NAME01[] = {
-	"ZEnemy01"/*,"ZEnemy02","ZEnemy03","ZEnemy04"*/
+const static char* ENEMY_NAME[] = {
+	"ZEnemy01","ZEnemy02","ZEnemy03","ZEnemy04"
 };
-const static char* ENEMY_NAME02[] = {
-	"ZEnemy02"
-};
-const static char* ENEMY_NAME03[] = {
-	"ZEnemy03"
-};
-const static char* ENEMY_NAME04[] = {
-	"ZEnemy04"
-};
- 
+//const static char* ENEMY_NAME02[] = {
+//	"ZEnemy02"
+//};
+//const static char* ENEMY_NAME03[] = {
+//	"ZEnemy03"
+//};
+//const static char* ENEMY_NAME04[] = {
+//	"ZEnemy04"
+//};
+
+//const static char* PORTAL_NAME = {
+//   "NPortal"/*,"RPortal"*/
+//};
 
 /*
 * @brief
@@ -33,6 +36,10 @@ const static NEW_ENEMY_FUNC04 ENEMY_FUNC04 = {
 
 const static NEW_PORTAL_FUNC PORTAL_FUNC = {
 	CSpownPortal::New
+};
+
+const static NEW_BUMPER_FUNC BUMPER_FUNC = {
+	CSpownBumper::New
 };
 
 //-------------------------------------------------------------
@@ -89,12 +96,27 @@ CLoadScript::CLoadScript(string file)
 		if (comment) continue;
 
 		if (command == "enemy") {
-			for (int i = 0, in = sizeof(ENEMY_NAME01) / sizeof(char*); i < in; i++) {
-				if (param0 == ENEMY_NAME01[i]) {
-					Command.push_back(new CEnemyCommand01(ENEMY_FUNC01, stof(param1), stof(param2)));
+			for (int i = 0, in = sizeof(ENEMY_NAME) / sizeof(char*); i < in; i++) {
+				if (param0 == ENEMY_NAME[i]) {
+					switch (i)
+					{
+					case 0:
+						Command.push_back(new CEnemyCommand01(ENEMY_FUNC01, stof(param1), stof(param2)));
+						break;
+					case 1:
+						Command.push_back(new CEnemyCommand02(ENEMY_FUNC02, stof(param1), stof(param2)));
+						break;
+					case 2:
+						Command.push_back(new CEnemyCommand03(ENEMY_FUNC03, stof(param1), stof(param2)));
+						break;
+					case 3:
+						Command.push_back(new CEnemyCommand04(ENEMY_FUNC04, stof(param1), stof(param2)));
+						break;
+					}
+					//Command.push_back(new CEnemyCommand01(ENEMY_FUNC01, stof(param1), stof(param2)));
 				}
 			}
-			for (int i = 0, in = sizeof(ENEMY_NAME02) / sizeof(char*); i < in; i++) {
+			/*for (int i = 0, in = sizeof(ENEMY_NAME02) / sizeof(char*); i < in; i++) {
 				if (param0 == ENEMY_NAME02[i]) {
 					Command.push_back(new CEnemyCommand02(ENEMY_FUNC02, stof(param1), stof(param2)));
 				}
@@ -108,11 +130,14 @@ CLoadScript::CLoadScript(string file)
 				if (param0 == ENEMY_NAME04[i]) {
 					Command.push_back(new CEnemyCommand04(ENEMY_FUNC04, stof(param1), stof(param2)));
 				}
-			}
+			}*/
 		}
 		else if (command == "portal") {
-			Command.push_back(new CPortalCommand(PORTAL_FUNC, stof(param1), stof(param2), stof(param3)));
+			Command.push_back(new CPortalCommand(PORTAL_FUNC, stof(param0), stof(param1), stof(param2)));
 		}
+		/*else if (command == "bumper") {
+			Command.push_back(new CBumperCommand(BUMPER_FUNC, stof(param0), stof(param1), stof(param2)));
+		}*/
 	}
 }
 

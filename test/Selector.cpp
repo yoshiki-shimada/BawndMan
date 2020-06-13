@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "UI.h"
+#include "NextArrow.h"
 #include "Fade.h"
 #include "LoadScript.h"
 
@@ -98,6 +99,7 @@ bool CTitle::Move() {
 CStage::CStage(int Num)
 	: Time(0), m_eLine(TOP), nIDCount(0), nAlphaID(-1)
 {
+	SH->m_eStagePhase = RunStage;
 	//! NFadeを消す前にSFadeをnew
 	//! SFadeはnewせずAlphaを変えてあげる
 	//CreateSFade();
@@ -107,10 +109,10 @@ CStage::CStage(int Num)
 
 	new CNFade(FADEIN);
 	new CBGStage1(0);
-	new CSpownBumper();
+	new CSpownBumper(Num);
 	SH->Script[Num]->Init();
 	SH->Script[Num]->Run();
-	new CSpownPortal();
+	//new CSpownPortal();
 	new CNormalPlayer(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, PI * -0.25);
 	new CUI();
 
@@ -122,29 +124,48 @@ bool CStage::Move() {
 	//if (nAlphaID >= 0)
 		//FadeOut();
 
-	Time++;
-
 	//! ゲームオーバー処理
-	if (SH->Count <= -1) {
+	if (SH->Count == -1) {
+		SH->m_eStagePhase = GameOver;
+	}
+
+	switch (SH->m_eStagePhase)
+	{
+	case Run:
+		Time++;
+		break;
+
+	case GameOver:
 		//! Fadeのnew前にDelete
 		SH->NFadeList->DeleteTask();
 		//! フェードアウト処理
 		new CNFade(FADEOUT);
 		new CGOver();
 		return false;
-	}
+		break;
 
-	//! ゲームクリア処理
-	if (SH->ECount <= 0) {
+	case NextStage:
+		//! m_eStagePhase=StageClearへの切替はPlayerで
+		SH->m_ePhase = End;
+		SH->m_eStagePhase = RunStage;
+		new CNextArrow();
+		break;
+
+	case StageClear:
+		
 		//! Fadeのnew前にDelete
 		SH->NFadeList->DeleteTask();
-		SH->m_ePhase = End;
 		//! フェードアウト処理
 		new CNFade(FADEOUT);
 		nStageNum++;
 		new CWait(nStageNum);
+		return false;
+		break;
+
+	case GameClear:
 		//new CGCreal();
 		return false;
+		break;
 	}
 
 	return true;
@@ -372,6 +393,7 @@ CWait::CWait(int Num) : CMover(SH->WaitList, 0, 0), nNum(Num), nCount(40)
 	//new せず使いまわせるものは使いまわす。
 	//SH->NFadeList->DeleteTask();
 	SH->BGList->DeleteTask();
+	SH->ArrowList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
 	SH->Enemy01List->DeleteTask();
@@ -398,6 +420,7 @@ CGOver::CGOver() : MenuPos(MENU_FIRST)
 	SH->NFadeList->DeleteTask();
 	//SH->SceneList->DeleteTask();
 	SH->BGList->DeleteTask();
+	SH->ArrowList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
 	SH->Enemy01List->DeleteTask();
@@ -453,6 +476,7 @@ CGCreal::CGCreal() : MenuPos(MENU_FIRST)
 	//! ゲームシーンの使ったものを消す
 	SH->NFadeList->DeleteTask();
 	SH->BGList->DeleteTask();
+	SH->ArrowList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
 	SH->Enemy01List->DeleteTask();

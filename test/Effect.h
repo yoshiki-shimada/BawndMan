@@ -63,3 +63,22 @@ public:
 	virtual bool Move();
 	virtual void Draw();
 };
+
+//=============================================================
+// ポータル変化クラス
+//=============================================================
+class CPortalEffect : public CEffect {
+
+protected:
+	// タイマー
+	int Time;
+	int Count;
+
+public:
+	// コンストラクタ
+	CPortalEffect(float x, float y);
+
+	// 移動、描画
+	virtual bool Move();
+	virtual void Draw();
+};

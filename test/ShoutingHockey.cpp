@@ -19,6 +19,7 @@
 #include "Enemy04.h"
 #include "Bullet.h"
 #include "UI.h"
+#include "NextArrow.h"
 #include "Effect.h"
 #include "Fade.h"
 #include "LoadScript.h"
@@ -27,7 +28,7 @@
 CShoutingHockey *SH;
 
 //! コンストラクタ
-CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), TitleMenuPos(MENU_FIRST)
+CShoutingHockey::CShoutingHockey() : ECount(0), Count(1), bMoveFlag(false), TitleMenuPos(MENU_FIRST)
 {
 	SetGraphMode(SCREEN_WIDTH_ANDUI, SCREEN_HEIGHT, SCREEN_COLOR);
 	ChangeWindowMode(TRUE);
@@ -46,9 +47,10 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 	Enemy03List = new CRemTaskList(sizeof(CZakoEnemy3), 100);
 	Enemy04List = new CRemTaskList(sizeof(CZakoEnemy4), 100);
 	BulletList = new CRemTaskList(sizeof(CDirBullet), 100);
-	PlayerList = new CRemTaskList(sizeof(CNormalPlayer), 10);
+	PlayerList = new CRemTaskList(sizeof(CNormalPlayer), 100);
 	EffectList = new CRemTaskList(sizeof(CPlayerCrash), 10);
 	UiList = new CRemTaskList(sizeof(CUI), 10);
+	ArrowList = new CRemTaskList(sizeof(CNextArrow), 10);
 	NFadeList = new CRemTaskList(sizeof(CNFade), 10);
 	SFadeList = new CRemTaskList(sizeof(CSFade), 100);
 
@@ -92,7 +94,7 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 	);
 	//! ポータル
 	LoadDivGraph(PORTAL, PORTAL_PATTERN,
-		PORTAL_PATTERN, 1,
+		PORTAL_PATTERN_X, PORTAL_PATTERN_Y,
 		PORTAL_SIZE, PORTAL_SIZE,
 		GHPortal
 	);
@@ -138,15 +140,25 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 		METAR_CHIP_SIZE_X, METAR_CHIP_SIZE_Y,
 		GHMetar
 	);
-	LoadDivGraph(CRASH_CHIP, CRASH_PATTERN,
-		CRASH_PATTERN, 1,
-		CRASH_CHIP_SIZE_X, CRASH_CHIP_SIZE_Y,
+	LoadDivGraph(ARROW_CHIP, ARROW_PATTERN,
+		ARROW_PATTERN, 1,
+		ARROW_SIZE_X, ARROW_SIZE_Y,
+		GHArrow
+	);
+	LoadDivGraph(PCRASH_CHIP, PCRASH_PATTERN,
+		PCRASH_PATTERN, 1,
+		PCRASH_CHIP_SIZE, PCRASH_CHIP_SIZE,
 		GHPCrash
 	);
-	LoadDivGraph(CRASH_CHIP, CRASH_PATTERN,
-		CRASH_PATTERN, 1,
-		CRASH_CHIP_SIZE_X, CRASH_CHIP_SIZE_Y,
+	LoadDivGraph(ECRASH_CHIP, ECRASH_PATTERN,
+		ECRASH_PATTERN, 1,
+		ECRASH_CHIP_SIZE, ECRASH_CHIP_SIZE,
 		GHECrash
+	);
+	LoadDivGraph(PORTAL_EFFECT_CHIP, PORTAL_EFFECT_PATTERN,
+		PORTAL_EFFECT_PATTERN, 1,
+		PORTAL_EFFECT_SIZE, PORTAL_EFFECT_SIZE,
+		GHPortalEffect
 	);
 	//! ノーマルフェード
 	LoadDivGraph(FADEBG, 1,
@@ -165,11 +177,11 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(0), bMoveFlag(false), Titl
 
 	// スクリプト
 	//Script[0] = new CLoadScript("Res\\Stage01Script.txt");
-	Script[0] = new CLoadScript("Res\\StagePromoScript.txt");
-	Script[1] = new CLoadScript("Res\\Stage02Script.txt");
-	Script[2] = new CLoadScript("Res\\Stage03Script.txt");
-	Script[3] = new CLoadScript("Res\\Stage04Script.txt");
-	Script[4] = new CLoadScript("Res\\Stage05Script.txt");
+	Script[0] = new CLoadScript("res\\Stage01Script.txt");
+	Script[1] = new CLoadScript("res\\Stage02Script.txt");
+	Script[2] = new CLoadScript("res\\Stage03Script.txt");
+	Script[3] = new CLoadScript("res\\Stage04Script.txt");
+	Script[4] = new CLoadScript("res\\Stage05Script.txt");
 
 }
 
@@ -219,6 +231,7 @@ void CShoutingHockey::Move() {
 	MoveTask(TTextList);
 	MoveTask(WaitList);
 	MoveTask(BGList);
+	MoveTask(ArrowList);
 	if (!bMoveFlag) {
 		MoveTask(BumperList);
 		MoveTask(PortalList);
@@ -241,6 +254,7 @@ void CShoutingHockey::Draw() {
 	DrawTask(SceneList);
 	DrawTask(TTextList);
 	DrawTask(BGList);
+	DrawTask(ArrowList);
 	DrawTask(BumperList);
 	DrawTask(PortalList);
 	DrawTask(BulletList);

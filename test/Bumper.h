@@ -36,5 +36,7 @@ public:
 class CSpownBumper
 {
 public:
-	CSpownBumper();
+	CSpownBumper(int Num);
+
+	static CBumper* New(float x, float y, float dir) { return new CBumper(x, y, dir); }
 };

@@ -160,6 +160,7 @@
     <ClCompile Include="Enemy04.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="LoadScript.cpp" />
+    <ClCompile Include="NextArrow.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="RemTask.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Fade.h" />
     <ClInclude Include="LoadScript.h" />
     <ClInclude Include="Mover.h" />
+    <ClInclude Include="NextArrow.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="RemTask.h" />

@@ -2,6 +2,12 @@
 
 #include "Mover.h"
 
+enum PortalPattern {
+	REFPORTAL,
+	NOTREFPORTAL,
+	MAXNUM
+};
+
 class CPortal : public CMover
 {
 protected:
@@ -13,6 +19,10 @@ public:
 	int nChipNam;
 	float dPortaldir;
 	bool bSetPortal;
+	//! trueでバンパー
+	bool bRefPortal;
+
+	PortalPattern m_ePortal;
 
 	CPortal(float x, float y, double dir);
 
@@ -26,11 +36,15 @@ public:
 	// 移動、描画
 	virtual bool Move();
 	virtual void Draw();
+
+	void CheckRefPortal();
+	void SetHit();
+
 };
 
 class CSpownPortal {
 public:
-	CSpownPortal();
+	//CSpownPortal();
 
 	static CPortal* New(float x, float y, float dir) { return new CPortal(x, y, dir); }
 
