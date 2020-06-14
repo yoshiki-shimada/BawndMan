@@ -10,6 +10,8 @@
 #include "Mover.h"
 //-------------------------------------------------------
 
+//#define SCRIPT_LENGTH(array) (sizeof(*SH->Script) / sizeof(SH->Script[0]))
+
 class CSelector : public CMover
 {
 protected:
@@ -45,6 +47,7 @@ class CTitle : public CSelector {
 private:
 	int nCount;
 	bool bFade;
+	bool bClick;
 
 public:
 

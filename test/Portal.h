@@ -44,7 +44,7 @@ public:
 
 class CSpownPortal {
 public:
-	//CSpownPortal();
+	CSpownPortal(int Num);
 
 	static CPortal* New(float x, float y, float dir) { return new CPortal(x, y, dir); }
 

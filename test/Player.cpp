@@ -24,9 +24,12 @@
 * @brief コンストラクタ
 ******************************************************************/
 CPlayer::CPlayer(float x, float y, float dir) : CMover(SH->PlayerList, x, y, PLAYER_SIZE_HARF),
-Speed(PLAYER_SPEED), faccel(1.0), nSDownCount(0), fSDown(1.0)
+Speed(PLAYER_SPEED), nSDownCount(0), fSDown(1.0)
 {
-	SH->Count = 1;
+	// レベルの初期化
+	SH->Count = SH->Count;
+	// 加速度の初期化
+	faccel = 1.0f + ((SH->Count - 1) *0.5);
 	vx = cosf(dir) * Speed;
 	vy = -sinf(dir) * Speed;
 }
@@ -57,7 +60,7 @@ bool CPlayer::Move() {
 		CBumper *Bumper = (CBumper*)i.Next();
 		//! 当たったとき
 		if (CSHit(Bumper, Bumper->fRad, PLAYER_SIZE_HARF, PLAYER_SIZE_HARF)) {
-			nSDownCount += 10;
+			nSDownCount += 50;
 		}
 	}
 	//! NextArrowとの当たり判定
@@ -126,7 +129,7 @@ void CPlayer::Draw() {
 * @brief player当たり判定等
 ******************************************************************/
 CNormalPlayer::CNormalPlayer(float x, float y, float dir)
-	: CPlayer(x, y, dir), nInPortal(0), bHitportal(true), fUpS(0.0f)
+	: CPlayer(x, y, dir), nInPortal(0), bHitportal(true), fUpS(0.0f), FlagCount(0)
 {
 }
 
@@ -139,6 +142,8 @@ bool CNormalPlayer::Move() {
 
 	//! nPortalの初期化（毎フレーム）
 	nInPortal = 0;
+	//! FlagCountの初期化
+	FlagCount = 0;
 
 	//! Bumperは移動との兼ね合いがあるため上に書きます。
 	//! ポータルとの当たり判定
@@ -163,6 +168,9 @@ bool CNormalPlayer::Move() {
 			// バンパー状態の処理
 		case REFPORTAL:
 			if (CCHit(Portal)) {
+				if (SH->Count < (PLAYER_PATTERN - 1))
+					SH->Count++;
+
 				Portal->SetHit();
 				//! 反射
 				PEVal = atan2(Portal->Y - Y, Portal->X - X);
@@ -171,6 +179,7 @@ bool CNormalPlayer::Move() {
 				SteyVy = sinf(EPVal) * Speed;
 				V1 = Disperse(vx, vy, PEVal);
 				V2 = Disperse(SteyVx, SteyVy, EPVal);
+				//V2 = Disperse(0, 0, EPVal);
 
 				//----------------------------
 				// ポータルの切替があるのでその時も跳ね返る、関数かする必要がある
@@ -193,7 +202,7 @@ bool CNormalPlayer::Move() {
 
 		case NOTREFPORTAL:
 			// ポータルにセット
-			if (CCHit(Portal) && !Portal->bSetPortal && bHitportal) {
+			if (CCHit(Portal) && !Portal->bSetPortal/* && bHitportal*/) {
 				X = Portal->X;
 				Y = Portal->Y;
 				vx = 0;
@@ -211,34 +220,48 @@ bool CNormalPlayer::Move() {
 					vx = cosf(Portal->dPortaldir) * Speed;
 					vy = sinf(Portal->dPortaldir) * Speed;
 					//! 移動
-					//X += vx;
-					//Y += vy;
 					X += vx * faccel;
 					Y += vy * faccel;
+					//X += vx;
+					//Y += vy;
 					bHitportal = false;
-					// リングに入っていない状態の見た目に
-					Portal->nChipNam = NULL;
 				}
+				Portal->nChipNam = SH->Count;
 			}
 			// ポータルに当たっていない
 			else if (!CCHit(Portal)) {
 				//bSetPortal = false;
 				Portal->bSetPortal = false;
-				bHitportal = true;
+				// リングに入っていない状態の見た目に
+				Portal->nChipNam = NULL;
 			}
+
+			if (Portal->bSetPortal)
+				FlagCount = 1;
+
 			break;
 
 		}
 
 	}
 
+	if (FlagCount == 0)
+		bHitportal = true;
 
 	//! バンパーへの切替
 	if (bHitportal) {
 		if (SH->Key[KEY_INPUT_RETURN] == 1) {
 			for (CRemTaskIter i(SH->PortalList); i.HasNext();) {
 				CPortal *Portal = (CPortal*)i.Next();
+				//Portal->m_ePortal = REFPORTAL;
 				Portal->CheckRefPortal();
+			}
+		}
+		if (SH->Key[KEY_INPUT_SPACE] == 20) {
+			if (SH->Count >= 3) {
+				SH->Count -= 2;
+				vx = cosf((float)rand()) * Speed * 1.2;
+				vy = sinf((float)rand()) * Speed * 1.2;
 			}
 		}
 	}
@@ -284,8 +307,8 @@ bool CNormalPlayer::Move() {
 
 				// スピードを少し上げる
 				fUpS = atan2(vy, vx);
-				vx = cosf(fUpS) * faccel;
-				vy = sinf(fUpS) * faccel;
+				vx = cosf(fUpS) * Speed;
+				vy = sinf(fUpS) * Speed;
 
 				//! 当たり判定のないところまでプレイヤーを移動
 				fatanZ = atan2(Y - Enemy01->Y, X - Enemy01->X);
@@ -323,8 +346,8 @@ bool CNormalPlayer::Move() {
 
 			// スピードを少し上げる
 			fUpS = atan2(vy, vx);
-			vx = cosf(fUpS) * faccel;
-			vy = sinf(fUpS) * faccel;
+			vx = cosf(fUpS) * Speed;
+			vy = sinf(fUpS) * Speed;
 
 			//! 当たり判定のないところまでプレイヤーを移動
 			fatanZ = atan2(Y - Enemy02->Y, X - Enemy02->X);
@@ -357,8 +380,8 @@ bool CNormalPlayer::Move() {
 
 			// スピードを少し上げる
 			fUpS = atan2(vy, vx);
-			vx = cosf(fUpS) * faccel;
-			vy = sinf(fUpS) * faccel;
+			vx = cosf(fUpS) * Speed;
+			vy = sinf(fUpS) * Speed;
 
 			//! 当たり判定のないところまでプレイヤーを移動
 			fatanZ = atan2(Y - Enemy03->Y, X - Enemy03->X);
@@ -391,8 +414,8 @@ bool CNormalPlayer::Move() {
 
 			// スピードを少し上げる
 			fUpS = atan2(vy, vx);
-			vx = cosf(fUpS) * faccel;
-			vy = sinf(fUpS) * faccel;
+			vx = cosf(fUpS) * Speed;
+			vy = sinf(fUpS) * Speed;
 
 			//! 当たり判定のないところまでプレイヤーを移動
 			fatanZ = atan2(Y - Enemy04->Y, X - Enemy04->X);

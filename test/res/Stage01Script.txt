@@ -1,2 +1,1 @@
-enemy ZEnemy01 432 40
-portal 100 100 3.14159
+enemy ZEnemy01 432 150

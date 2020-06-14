@@ -73,10 +73,44 @@ void CPortal::SetHit()
 	nChipNam = 7;
 }
 
-//CSpownPortal::CSpownPortal()
-//{
-//	new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.75, PI);
-//	new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.25, PI * 180);
-//	new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.25, PI);
-//	new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.75, PI * 180);
-//}
+CSpownPortal::CSpownPortal(int Num)
+{
+	switch (Num)
+	{
+	case 0: // ŽlŠp
+
+		new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.75, PI);
+		new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.25, PI * 180);
+		new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.25, PI);
+		new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.75, PI * 180);
+		break;
+
+	case 1: // ŽOŠp
+
+		new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.25, PI * 180);
+		new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.25, PI);
+		new CPortal(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.75, PI * 90);
+		break;
+	
+	case 2: // ƒXƒ‰
+
+		new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.25, PI * 180);
+		new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.75, PI * 180);
+		new CPortal(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, PI * 90);
+		break;
+
+	case 3: // ‹tƒXƒ‰
+
+		new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.75, PI);
+		new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.25, PI);
+		new CPortal(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, PI * 90);
+		break;
+
+	case 4: // ˆê
+
+		new CPortal(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.5, PI);
+		new CPortal(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.5, PI);
+		break;
+	}
+
+}

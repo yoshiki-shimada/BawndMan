@@ -33,7 +33,7 @@ bool CZakoEnemy1::Move() {
 	static const int MinX = RLWALL_AND_PLAYER, MaxX = SCREEN_WIDTH - MinX;
 	static const int MinY = TBWALL_AND_PLAYER, MaxY = SCREEN_WIDTH - MinY;
 
-	if (Count % 10 == 0 && !NockBackFlag) {
+	if (Count % SARTH_COUNT == 0 && !NockBackFlag) {
 		CRemTaskIter i(SH->PlayerList);
 		CPlayer *player = (CPlayer*)i.Next();
 		rad = atan2(player->Y - Y, player->X - X);

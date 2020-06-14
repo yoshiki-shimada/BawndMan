@@ -1,1 +1,2 @@
-enemy ZEnemy02 432 40
+enemy ZEnemy02 432 200
+enemy ZEnemy01 600 160

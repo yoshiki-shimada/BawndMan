@@ -176,7 +176,7 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(1), bMoveFlag(false), Titl
 	//! サウンドハンドルの初期化
 
 	// スクリプト
-	//Script[0] = new CLoadScript("Res\\Stage01Script.txt");
+	//Script[0] = new CLoadScript("Res\\StagePromoScript.txt");
 	Script[0] = new CLoadScript("res\\Stage01Script.txt");
 	Script[1] = new CLoadScript("res\\Stage02Script.txt");
 	Script[2] = new CLoadScript("res\\Stage03Script.txt");

@@ -24,8 +24,9 @@ CStage *CS;
 /*************************************************
 * @brief タイトルクラス
 *************************************************/
-CTitle::CTitle() : nCount(0), bFade(false)
+CTitle::CTitle() : nCount(0), bFade(false), bClick(true)
 {
+	SH->Count = 1;
 	SH->NFadeList->DeleteTask();
 	new CNFade(FADEIN);
 	new CTitleText();
@@ -41,7 +42,8 @@ bool CTitle::Move() {
 
 	if (SH->Key[KEY_INPUT_UP] == 1 && SH->TitleMenuPos > 0) SH->TitleMenuPos--;
 	else if (SH->Key[KEY_INPUT_DOWN] == 1 && SH->TitleMenuPos < MENU_MAX - 1) SH->TitleMenuPos++;
-	else if (SH->Key[KEY_INPUT_SPACE] == 1) {
+	else if (SH->Key[KEY_INPUT_SPACE] == 1 && bClick) {
+		bClick = !bClick;
 		SH->Key[KEY_INPUT_SPACE]++;
 
 		//! Fadeのnew前にDelete
@@ -99,6 +101,8 @@ bool CTitle::Move() {
 CStage::CStage(int Num)
 	: Time(0), m_eLine(TOP), nIDCount(0), nAlphaID(-1)
 {
+	nStageNum = Num;
+
 	SH->m_eStagePhase = RunStage;
 	//! NFadeを消す前にSFadeをnew
 	//! SFadeはnewせずAlphaを変えてあげる
@@ -109,10 +113,10 @@ CStage::CStage(int Num)
 
 	new CNFade(FADEIN);
 	new CBGStage1(0);
-	new CSpownBumper(Num);
-	SH->Script[Num]->Init();
-	SH->Script[Num]->Run();
-	//new CSpownPortal();
+	new CSpownBumper(nStageNum);
+	SH->Script[nStageNum]->Init();
+	SH->Script[nStageNum]->Run();
+	new CSpownPortal(nStageNum);
 	new CNormalPlayer(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5, PI * -0.25);
 	new CUI();
 
@@ -152,18 +156,24 @@ bool CStage::Move() {
 		break;
 
 	case StageClear:
-		
+		//! ステージMaxサイズ
+		if (nStageNum >= 4) {
+			SH->m_eStagePhase = GameClear;
+			break;
+		}
+		//SH->bMoveFlag = true;
 		//! Fadeのnew前にDelete
 		SH->NFadeList->DeleteTask();
 		//! フェードアウト処理
 		new CNFade(FADEOUT);
-		nStageNum++;
 		new CWait(nStageNum);
 		return false;
 		break;
 
 	case GameClear:
-		//new CGCreal();
+		SH->bMoveFlag = true;
+		new CNFade(FADEOUT);
+		new CGCreal();
 		return false;
 		break;
 	}
@@ -388,15 +398,18 @@ void CStage::CreateSFade()
 
 //--------------------------------------------------------------------------------------------
 
-CWait::CWait(int Num) : CMover(SH->WaitList, 0, 0), nNum(Num), nCount(40)
+CWait::CWait(int Num) : CMover(SH->WaitList, 0, 0), nNum(Num), nCount(100)
 {
 	//new せず使いまわせるものは使いまわす。
-	//SH->NFadeList->DeleteTask();
 	SH->BGList->DeleteTask();
 	SH->ArrowList->DeleteTask();
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
 	SH->Enemy01List->DeleteTask();
+	SH->Enemy02List->DeleteTask();
+	SH->Enemy03List->DeleteTask();
+	SH->Enemy04List->DeleteTask();
+	SH->BulletList->DeleteTask();
 	SH->PlayerList->DeleteTask();
 }
 
@@ -404,7 +417,7 @@ bool CWait::Move() {
 	if (nCount < 0) {
 		//SH->SceneList->DeleteTask();
 		SH->m_ePhase = Run;
-		new CStage(nNum);
+		new CStage(++nNum);
 		return false;
 	}
 	nCount--;
@@ -424,6 +437,10 @@ CGOver::CGOver() : MenuPos(MENU_FIRST)
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
 	SH->Enemy01List->DeleteTask();
+	SH->Enemy02List->DeleteTask();
+	SH->Enemy03List->DeleteTask();
+	SH->Enemy04List->DeleteTask();
+	SH->BulletList->DeleteTask();
 	SH->PlayerList->DeleteTask();
 }
 
@@ -480,6 +497,10 @@ CGCreal::CGCreal() : MenuPos(MENU_FIRST)
 	SH->BumperList->DeleteTask();
 	SH->PortalList->DeleteTask();
 	SH->Enemy01List->DeleteTask();
+	SH->Enemy02List->DeleteTask();
+	SH->Enemy03List->DeleteTask();
+	SH->Enemy04List->DeleteTask();
+	SH->BulletList->DeleteTask();
 	SH->PlayerList->DeleteTask();
 }
 

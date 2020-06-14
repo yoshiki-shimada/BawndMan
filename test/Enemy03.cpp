@@ -26,12 +26,12 @@ CZakoEnemy3::CZakoEnemy3(float x, float y)
 //=============================================================
 bool CZakoEnemy3::Move() {
 
-	if (nCount / 200 == 0) {
+	if (nCount % 200 == 0) {
 		CRemTaskIter i(SH->PlayerList);
 		CPlayer *player = (CPlayer*)i.Next();
 		rad = atan2(player->Y - Y, player->X - X);
 		// ’e‚Ì¶¬
-		new CDirBullet(X, Y, rad, 1.0f, 1.0f, 2, 1);
+		new CDirBullet(X, Y, rad, 1.2f, 1.0f, 2, 1);
 		nCount = 0;
 	}
 	nCount++;
@@ -55,7 +55,7 @@ bool CZakoEnemy3::Move() {
 //=============================================================
 void CZakoEnemy3::Draw() {
 	DrawGraphF(X - ZENEMY_CHIP_HARF, Y - ZENEMY_CHIP_HARF,
-		SH->GHZEnemy02[(nCount / ZENEMY_ANIM_SPEED) % ZENEMY_PATTERN],
+		SH->GHZEnemy03[(nCount / ZENEMY_ANIM_SPEED) % ZENEMY_PATTERN],
 		TRUE
 	);
 }

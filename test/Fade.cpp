@@ -18,6 +18,8 @@ bool CNFade::Move() {
 	if (m_ePhase == FADEIN) {
 		if (nAlpha >= 255) {
 			SH->bSceneFlag = false;
+			// “®‚­‚æ‚¤‚É‚·‚é
+			SH->bMoveFlag = false;
 			return false;
 		}
 
@@ -38,6 +40,8 @@ bool CNFade::Move() {
 		if (nAlphaCount > 2) {
 			nAlpha -= 5;
 			nAlphaCount = 0;
+			// “®‚©‚È‚¢‚æ‚¤‚É‚·‚é
+			SH->bMoveFlag = true;
 		}
 	}
 

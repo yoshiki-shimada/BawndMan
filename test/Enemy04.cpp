@@ -29,7 +29,7 @@ bool CZakoEnemy4::Move() {
 
 	if (nCount / 200 == 0) {
 		// íeÇÃê∂ê¨
-		for (int r = 0.0f; r < 20; r++) {
+		for (int r = 0; r < 15; r++) {
 			rad = (int)rand() % 360;
 			new CDirBullet(X, Y, rad, 1.2f, 1.2f, 1, 2);
 		}
@@ -56,7 +56,7 @@ bool CZakoEnemy4::Move() {
 //=============================================================
 void CZakoEnemy4::Draw() {
 	DrawGraphF(X - ZENEMY_CHIP_HARF, Y - ZENEMY_CHIP_HARF,
-		SH->GHZEnemy02[(nCount / ZENEMY_ANIM_SPEED) % ZENEMY_PATTERN],
+		SH->GHZEnemy04[(nCount / ZENEMY_ANIM_SPEED) % ZENEMY_PATTERN],
 		TRUE
 	);
 }

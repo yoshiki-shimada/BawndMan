@@ -1,1 +1,3 @@
-enemy ZEnemy03 432 40
+enemy ZEnemy03 150 150
+enemy ZEnemy02 632 532
+enemy ZEnemy02 532 632

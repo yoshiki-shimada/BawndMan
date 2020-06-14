@@ -72,6 +72,7 @@ private:
 	bool bHitportal;
 	//! 反射時のスピード調整用
 	float fUpS;
+	int FlagCount;
 
 	float *Disperse(float Pvx, float Pvy, float PVal);
 

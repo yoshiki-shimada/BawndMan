@@ -12,7 +12,8 @@ private:
 protected:
 
 public:
-	CNextArrow() : CMover(SH->ArrowList, SCREEN_WIDTH * 0.5 - ARROW_SIZE_HARF, 100, ARROW_SIZE_X, ARROW_SIZE_Y), ChipNum(0) {}
+	//! x,y,w,h‚Í“–‚½‚è”»’è—p‚É
+	CNextArrow() : CMover(SH->ArrowList, SCREEN_WIDTH * 0.5, 0, ARROW_SIZE_HARF, ARROW_SIZE_HARF), ChipNum(0) {}
 
 	void* operator new(size_t t) {
 		return operator_new(t, SH->ArrowList);

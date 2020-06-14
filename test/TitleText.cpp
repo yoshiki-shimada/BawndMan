@@ -10,6 +10,11 @@ bool CTitleText::Move()
 	else
 		fYajiY = TEXT_POS_Y_1;
 
+	if (fYajiX <= 0.0f) {
+		fYajiX = 20.0f;
+	}
+	fYajiX -= 0.5f;
+
 	return true;
 }
 
@@ -27,7 +32,7 @@ void CTitleText::Draw()
 		SH->GHText02,
 		TRUE
 	);
-	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5) - YAJI_SIZE_X), fYajiY + TEXT_HARFHARF_Y,
+	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5) - YAJI_SIZE_X - 10.0f) + fYajiX, fYajiY + TEXT_HARFHARF_Y,
 		SH->GHYaji,
 		TRUE
 	);

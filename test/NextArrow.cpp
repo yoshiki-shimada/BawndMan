@@ -9,7 +9,7 @@ bool CNextArrow::Move() {
 }
 
 void CNextArrow::Draw() {
-	DrawGraphF(X, Y,
+	DrawGraphF(X - ARROW_SIZE_HARF, 100.0f,
 		SH->GHArrow[(ChipNum / ARROW_ANIM_SPEED) % ARROW_PATTERN],
 		TRUE
 	);
