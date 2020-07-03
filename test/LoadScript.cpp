@@ -1,6 +1,15 @@
+/*******************************************************************
+* @file		LloadScript.cpp
+* @brief	マップ生成用.cpp
+* @author	yshimada
+* @data		20200109
+*******************************************************************/
+
 #include "LoadScript.h"
 
-// 敵の種類（名前）
+/**
+* @brief 敵の種類、名前
+*/
 const static char* ENEMY_NAME[] = {
 	"ZEnemy01","ZEnemy02","ZEnemy03","ZEnemy04"
 };
@@ -18,8 +27,8 @@ const static char* ENEMY_NAME[] = {
 //   "NPortal"/*,"RPortal"*/
 //};
 
-/*
-* @brief
+/**
+* @brief new関数
 */
 const static NEW_ENEMY_FUNC01 ENEMY_FUNC01 = {
 	CZakoEnemy1::New
@@ -42,7 +51,11 @@ const static NEW_BUMPER_FUNC BUMPER_FUNC = {
 	CSpownBumper::New
 };
 
-//-------------------------------------------------------------
+/*
+* @brief	文字のポジションをチェック
+* @param	[in]	s chara型配列	pattern 空白かどうか
+* @return	空白のポジションを返す	見つからないときはNon position
+*/
 int Find(string s, string pattern) {
 	for (int i = 0, n = s.length(), pl = pattern.length(); i < n; i++) {
 		if (s.compare(i, pl, pattern) == 0) return i;
@@ -53,7 +66,11 @@ int Find(string s, string pattern) {
 	return string::npos;
 }
 
-//-------------------------------------------------------------
+/*
+* @brief	指定位置からの文字列取得
+* @param	[in]	s chara型配列	index いくつ目の文字列か	separator 空白かどうか
+* @return	文字列を返す
+*/
 string GetToken(string s, int index, string separator) {
 	int sl = separator.length();
 	for (int i = 0; i < index; i++) {
@@ -66,7 +83,10 @@ string GetToken(string s, int index, string separator) {
 	return s.substr(0, Find(s, separator));
 }
 
-//=============================================================
+/*
+* @brief	Scriptのロード
+* @param	[in]	file Scriptファイル
+*/
 CLoadScript::CLoadScript(string file)
 	: nCommandIndex(0)
 {
@@ -141,11 +161,16 @@ CLoadScript::CLoadScript(string file)
 	}
 }
 
+/*
+* @brief	実行開始
+*/
 void CLoadScript::Init() {
 	nCommandIndex = 0;
 }
 
-//-------------------------------------------------------------
+/*
+* @brief	実行設定
+*/
 void CLoadScript::Run() {
 	while (nCommandIndex < (int)Command.size()) {
 		Command[nCommandIndex]->Run();

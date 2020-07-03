@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file		Bumper.cpp
+* @brief	バンパー用.cpp
+* @author	yshimada
+* @data		20191222
+*******************************************************************/
+
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Bumper.h"
@@ -10,6 +17,9 @@ CBumper::CBumper(float x, float y, float rad) : CMover(SH->BumperList, x, y, BUM
 {
 }
 
+/*****************************************
+* @brief 移動クラス
+*****************************************/
 bool CBumper::Move()
 {
 	nCount++;
@@ -17,7 +27,9 @@ bool CBumper::Move()
 	return true;
 }
 
-// 描画
+/*****************************************
+* @brief 描画
+*****************************************/
 void CBumper::Draw()
 {
 	// バンパー
@@ -26,6 +38,10 @@ void CBumper::Draw()
 		TRUE);
 }
 
+/**
+* @brief	バンパー生成関数
+* @param	[in]	Num ステージ番号
+*/
 CSpownBumper::CSpownBumper(int Num)
 {
 	switch (Num)
@@ -33,35 +49,35 @@ CSpownBumper::CSpownBumper(int Num)
 	case 0:
 		//new CBumper(SCREEN_WIDTH * 0.5, BUMPER_POS - BUMPER_SIZE_Y, PI);
 		//new CBumper(SCREEN_WIDTH * 0.5, (SCREEN_HEIGHT - BUMPER_POS) + BUMPER_SIZE_Y, PI);
-		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
+		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, -PI_HARF);
 		new CBumper((SCREEN_WIDTH - BUMPER_POS) + BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
 		break;
 
 	case 1:
 		//new CBumper(SCREEN_WIDTH * 0.5, BUMPER_POS - BUMPER_SIZE_Y, PI);
 		//new CBumper(SCREEN_WIDTH * 0.5, (SCREEN_HEIGHT - BUMPER_POS) + BUMPER_SIZE_Y, PI);
-		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
+		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, -PI_HARF);
 		new CBumper((SCREEN_WIDTH - BUMPER_POS) + BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
 		break;
 
 	case 2:
 		//new CBumper(SCREEN_WIDTH * 0.5, BUMPER_POS - BUMPER_SIZE_Y, PI);
 		//new CBumper(SCREEN_WIDTH * 0.5, (SCREEN_HEIGHT - BUMPER_POS) + BUMPER_SIZE_Y, PI);
-		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
+		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, -PI_HARF);
 		new CBumper((SCREEN_WIDTH - BUMPER_POS) + BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
 		break;
 
 	case 3:
 		//new CBumper(SCREEN_WIDTH * 0.5, BUMPER_POS - BUMPER_SIZE_Y, PI);
 		//new CBumper(SCREEN_WIDTH * 0.5, (SCREEN_HEIGHT - BUMPER_POS) + BUMPER_SIZE_Y, PI);
-		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
+		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, -PI_HARF);
 		new CBumper((SCREEN_WIDTH - BUMPER_POS) + BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
 		break;
 
 	case 4:
 		//new CBumper(SCREEN_WIDTH * 0.5, BUMPER_POS - BUMPER_SIZE_Y, PI);
 		//new CBumper(SCREEN_WIDTH * 0.5, (SCREEN_HEIGHT - BUMPER_POS) + BUMPER_SIZE_Y, PI);
-		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
+		new CBumper(BUMPER_POS - BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, -PI_HARF);
 		new CBumper((SCREEN_WIDTH - BUMPER_POS) + BUMPER_SIZE_Y, SCREEN_HEIGHT * 0.5, PI_HARF);
 		break;
 

@@ -1,9 +1,10 @@
 /******************************************************************
 * @file		Enemy.cpp
-* @brief	敵のcpp
+* @brief	敵用.cpp
 * @author	yshimada
 * @data		20191221
 *******************************************************************/
+
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Enemy.h"
@@ -16,18 +17,18 @@
 #include <math.h>
 
 
-//=============================================================
-// @burief ブルー,コンストラクタ
-//=============================================================
+/*****************************************
+* @brief Enemy01コンストラクタ
+*****************************************/
 CZakoEnemy1::CZakoEnemy1(float x, float y)
-	: CEnemy(x, y, ZENEMY_CHIP_HARF, 1, 1, 100), Count(0), vx(0), vy(0), rad(0), Speed(1), nNocCount(0)
+	: CEnemy(x, y, ZENEMY_CHIP_HARF_Y, 1, 1, 100), Count(0), vx(0), vy(0), rad(0), Speed(1), nNocCount(0)
 {
 	SH->ECount++;
 }
 
-//=============================================================
-// 移動
-//=============================================================
+/*****************************************
+* @brief 移動
+*****************************************/
 bool CZakoEnemy1::Move() {
 	// 移動範囲
 	static const int MinX = RLWALL_AND_PLAYER, MaxX = SCREEN_WIDTH - MinX;
@@ -59,7 +60,7 @@ bool CZakoEnemy1::Move() {
 	}
 
 	X += vx;
- 	Y += vy;
+	Y += vy;
 
 	//! 壁での反射判定
 	if (X < MinX && vx < 0)
@@ -104,6 +105,7 @@ bool CZakoEnemy1::Move() {
 
 	//! 消す
 	if (Vit <= 0 && !NockBackFlag) {
+		PlaySoundMem(SH->SHCrash, DX_PLAYTYPE_BACK);
 		new CEnemyCrash(X, Y);
 		SH->ECount--;
 		//! ゲームクリア処理
@@ -116,17 +118,20 @@ bool CZakoEnemy1::Move() {
 	return true;
 }
 
-//=============================================================
-// 描画
-//=============================================================
+/*****************************************
+* @brief 描画
+*****************************************/
 void CZakoEnemy1::Draw() {
-	DrawGraphF(X - ZENEMY_CHIP_HARF, Y - ZENEMY_CHIP_HARF,
+	DrawGraphF(X - ZENEMY_CHIP_HARF_X, Y - ZENEMY_CHIP_HARF_Y,
 		SH->GHZEnemy01[(Count / ZENEMY_ANIM_SPEED) % ZENEMY_PATTERN],
 		TRUE
 	);
 }
 
-
+/**
+* @brief	連鎖時反射速度変更関数
+* @param	[in]	Ex,Ey 相手のポジション
+*/
 void CZakoEnemy1::Ref(float Ex, float Ey)
 {
 	Valx = atan2(Ey - Y, Ex - X);
@@ -150,8 +155,10 @@ void CZakoEnemy1::Ref(float Ex, float Ey)
 }
 
 
-/*
-* @brief 反射用関数
+/**
+* @brief	連鎖時用速度分解
+* @param	[in]	Uxs,Uys x,y方向の速度	UVal1 自球衝突前進行方向
+* @return	自分x,y 相手x,y の配列を返す
 */
 float *CZakoEnemy1::Disperse(float Uxs, float Uys, float UVal1)
 {

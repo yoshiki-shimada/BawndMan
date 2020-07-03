@@ -154,7 +154,6 @@
     <ClCompile Include="BG.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Enemy02.cpp" />
-    <ClCompile Include="DrawPixel.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy03.cpp" />
     <ClCompile Include="Enemy04.cpp" />

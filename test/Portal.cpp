@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file		Portal.cpp
+* @brief	ポータル用.cpp
+* @author	yshimada
+* @data		20191217
+*******************************************************************/
+
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Portal.h"
@@ -6,13 +13,18 @@
 
 #define PI2 PI * 2
 
+/*****************************************
+* @brief コンストラクタ
+*****************************************/
 CPortal::CPortal(float x, float y, double dir)
 	: CMover(SH->PortalList, x, y, PORTAL_SIZE_HARFCOLLI),
 	nCount(0), nRotSpeed(5), nChipNam(0), dPortaldir(dir), dRotdir(PI * 0.25 * 0.25), bSetPortal(false), bRefPortal(false), m_ePortal(NOTREFPORTAL)
 {
 }
 
-
+/*****************************************
+* @brief 移動
+*****************************************/
 bool CPortal::Move() {
 	nCount++;
 
@@ -39,6 +51,9 @@ bool CPortal::Move() {
 	return true;
 }
 
+/*****************************************
+* @brief 描画
+*****************************************/
 void CPortal::Draw() {
 
 	int a = 0;
@@ -46,6 +61,9 @@ void CPortal::Draw() {
 		SH->GHPortal[nChipNam], TRUE);
 }
 
+/**
+* @brief	ポータルの状態チェック
+*/
 void CPortal::CheckRefPortal()
 {
 	new CPortalEffect(X, Y);
@@ -67,12 +85,19 @@ void CPortal::CheckRefPortal()
 	}
 }
 
+/**
+* @brief	反射ポータルへの変化
+*/
 void CPortal::SetHit()
 {
 	nCount = 0;
 	nChipNam = 7;
 }
 
+/**
+* @brief	リングの生成用関数
+* @param	[in]	Num ステージ番号
+*/
 CSpownPortal::CSpownPortal(int Num)
 {
 	switch (Num)

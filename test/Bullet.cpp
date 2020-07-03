@@ -1,12 +1,19 @@
+/*******************************************************************
+* @file		Bullet.cpp
+* @brief	敵のショット用.cpp
+* @author	yshimada
+* @data		20200106
+*******************************************************************/
+
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Bullet.h"
 #include <math.h>
 
 
-//=============================================================
-// コンストラクタ
-//=============================================================
+/*****************************************
+* @brief コンストラクタ
+*****************************************/
 CDirBullet::CDirBullet(float x, float y, float dir, float spd, float accel, int Def, int Atack)
 	: CBullet(x, y, Def, Atack)
 {
@@ -19,9 +26,9 @@ CDirBullet::CDirBullet(float x, float y, float dir, float spd, float accel, int 
 	AY = accel;
 }
 
-//=============================================================
-// 移動
-//=============================================================
+/*****************************************
+* @brief 移動
+*****************************************/
 bool CDirBullet::Move() {
 
 	// 座標の更新
@@ -59,9 +66,9 @@ bool CDirBullet::Move() {
 	return true;
 }
 
-//=============================================================
-// 描画
-//=============================================================
+/*****************************************
+* @brief 描画
+*****************************************/
 void CDirBullet::Draw() {
 	DrawGraphF(X - BULLET_CHIP_SIZE_HARF, Y - BULLET_CHIP_SIZE_HARF,
 		SH->GHBullet[(Count / BULLET_ANIM_SPEED) % BULLET_PATTERN],

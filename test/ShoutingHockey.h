@@ -15,7 +15,7 @@ class CLoadScript;
 #define SCREEN_WIDTH	864
 #define SCREEN_HEIGHT	864
 //! スクリーンの横幅は黒い部分を設けるのでこれを引数に
-#define SCREEN_WIDTH_ANDUI	1064
+#define SCREEN_WIDTH_ANDUI	1158
 //! 一応色
 #define SCREEN_COLOR	32
 
@@ -31,7 +31,7 @@ class CLoadScript;
 #define FADE_SIZE_Y 1080
 #define FADE_SIZE_XY 36
 
-//--------------------------------------------------------
+//------------------------タイトル画面----------------------
 //! タイトル	864x864
 #define TITLEBG	"res\\TitleBG.png"
 #define TITLE_SIZE_X  864
@@ -53,7 +53,7 @@ class CLoadScript;
 #define YAJI_SIZE_Y 67
 
 
-//--------------------------------------------------------
+//------------------------ゲーム画面--------------------------
 
 //! ゲーム背景	908x864
 //! 両サイドのはみだし画像サイズ　22
@@ -98,6 +98,7 @@ enum BGPhase {
 #define PORTAL_PATTERN_X 5
 #define PORTAL_PATTERN_Y 2
 
+//! エネミー
 #define ZENEMY_CHIP01	"res\\ZEnemy1.png"
 #define ZENEMY_CHIP02	"res\\ZEnemy2.png"
 #define ZENEMY_CHIP03	"res\\ZEnemy3.png"
@@ -105,9 +106,10 @@ enum BGPhase {
 #define ZENEMY_PATTERN 4
 #define ZENEMY_CHIP_SIZE_X 53
 #define ZENEMY_CHIP_SIZE_Y 65
-#define ZENEMY_CHIP_HARF 28
-//#define ZENEMY_SE "res\\SE_Crash.wav"
+#define ZENEMY_CHIP_HARF_Y 32.5
+#define ZENEMY_CHIP_HARF_X 26.5
 
+//! バレット
 #define BULLET_CHIP	"res\\Bullet.png"
 #define BULLET_PATTERN 8
 #define BULLET_CHIP_SIZE_X 8
@@ -115,12 +117,18 @@ enum BGPhase {
 #define BULLET_CHIP_SIZE_HARF 4
 #define BULLET_SE "Res\\SE_Bullet.wav"
 
+//! メーターUI
 #define METAR_CHIP "res\\MeterChip.png"
 #define METAR_PATTERN 5
 #define METAR_CHIP_SIZE_X 199
 #define METAR_CHIP_SIZE_Y 253
 
-//-------------------------------------------------------------
+//! ルールテキストUI
+#define RULE "res\\Rule.png"
+#define RULE_SIZE 294
+
+
+//! エフェクト
 #define ECRASH_CHIP	"Res\\ZEnemyExpl.png"
 #define ECRASH_PATTERN 6
 #define ECRASH_CHIP_SIZE 64
@@ -131,6 +139,20 @@ enum BGPhase {
 #define PORTAL_EFFECT_PATTERN 7
 #define PORTAL_EFFECT_SIZE 72
 
+
+//-----------------------クリア画面----------------------------
+#define CLEARBG "res\\ClearBG.png"
+
+#define CLEAR_ROGO "res\\ClearRogo.png"
+#define CLEAR_ROGO_SIZE_X 782
+#define CLEAR_ROGO_SIZE_Y 114
+
+#define CLEAR_CHARA "res\\CharaRot.png"
+
+//-----------------------ゲームオーバー画面---------------------
+#define OVER_BG "res\\GameOverBG.png"
+
+//-----------------------構造体---------------------------------
 enum FadePhase {
 	FADEIN = 0,
 	FADEOUT = 1
@@ -150,6 +172,24 @@ enum StagePhase {
 	StageClear,
 	GameClear
 };
+
+//--------------------------サウンド-----------------------
+//! BGM
+#define TITLEBG_SE ("res\\STitleBG.mp3")
+#define STAGE_SE ("res\\SStageBG.mp3")
+#define OVER_SE ("res\\SGameOverBG.mp3")
+#define CLEAR_SE ("res\\SClearBG.mp3")
+
+//! SE
+#define SHOT_SE ("res\\SShot.wav")
+#define BULLET_SE ("res\\SBullet.wav")
+#define REF_SE ("res\\SRef.wav")
+#define DAMAGE_SE ("res\\SDamage.wav")
+#define UP_SE ("res\\SPowerup.wav")
+#define NEXTSTAGE_SE ("res\\SNextStage.wav")
+#define CLICK_SE ("res\\SClick.wav")
+#define CRASH_SE ("res\\SCrash.wav")
+#define SDOWN_SE ("res\\SSpeedDown.wav")
 
 /*
 * @brief MainClass
@@ -200,9 +240,22 @@ public:
 	int GHArrow[ARROW_PATTERN] = { 0 };
 	int GHPCrash[PCRASH_PATTERN] = { 0 };
 	int GHECrash[ECRASH_PATTERN] = { 0 };
+	int GHRule = 0;
 	int GHPortalEffect[PORTAL_EFFECT_PATTERN] = { 0 };
+	int GHClearBG = 0;
+	int GHClearRogo = 0;
+	int GHOverBG = 0;
 
-	//! サウンドハンドル
+	//! サウンドハンドル BG以外
+	int SHClick;
+	int SHCrash;
+	int SHRef;
+	int SHShot;
+	int SHBullet;
+	int SHDamage;
+	int SHLeverUP;
+	int SHNextStage;
+	int SHSDown;
 
 	//　コンストラクタ
 	CShoutingHockey();
@@ -218,10 +271,10 @@ public:
 	virtual void Draw();
 
 	//! タスクリスト
-	CRemTaskList *SceneList, *WaitList, *NFadeList, *SFadeList, *BGList,
+	CRemTaskList *SceneList, *WaitList, *NFadeList, /**SFadeList,*/ *BGList,
 		*BumperList, *PlayerList, *Enemy01List, *Enemy02List,
 		*Enemy03List, *Enemy04List, *BulletList, *PortalList, *UiList,
-		*TTextList, *EffectList, *ArrowList;
+		*TTextList, *EffectList, *ArrowList/*, *ClearOverList*/;
 	void MoveTask(CRemTaskList* list);
 	void DrawTask(CRemTaskList* list);
 

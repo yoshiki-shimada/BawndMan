@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file		Bumper.h
+* @brief	バンパー用.h
+* @author	yshimada
+* @data		20191222
+*******************************************************************/
+
 #pragma once
 //--------------------------------------------------------------
 #include "Mover.h"
@@ -6,7 +13,7 @@
 #define BUMPER_POS 45
 #define BUMPER_HARF_X BUMPER_SIZE_X * 0.5
 #define BUMPER_HARF_Y BUMPER_SIZE_Y * 0.5
-#define BUMPER_ANIM_SPEED 5
+#define BUMPER_ANIM_SPEED 6
 
 /*************************************************
 * @brief ステージクラス

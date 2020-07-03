@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file		NextArrow.h
+* @brief	次のステージに行くための矢印用.h
+* @author	yshimada
+* @data		20200109
+*******************************************************************/
+
 #pragma once
 
 #include "Mover.h"
@@ -8,8 +15,6 @@ class CNextArrow : public CMover
 {
 private:
 	int ChipNum;
-
-protected:
 
 public:
 	//! x,y,w,hは当たり判定用に
@@ -23,7 +28,7 @@ public:
 	}
 
 	// 移動、描画
-	virtual bool Move();
+	//virtual bool Move();
 	virtual void Draw();
 };
 

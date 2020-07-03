@@ -1,11 +1,18 @@
+/*******************************************************************
+* @file		UI.h
+* @brief	UI用.h
+* @author	yshimada
+* @data		20201210
+*******************************************************************/
+
 #pragma once
 
 #include "Mover.h"
 
 class CUI : public CMover
 {
-private:
 public:
+	// コンストラクタ
 	CUI() : CMover(SH->UiList, 0, 0) {};
 
 	void* operator new(size_t t) {

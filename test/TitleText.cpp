@@ -1,3 +1,10 @@
+/*******************************************************************
+* @file		Title.h
+* @brief	TitleClass.cpp
+* @author	yshimada
+* @data		20200110
+*******************************************************************/
+
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Selector.h"
@@ -5,34 +12,40 @@
 
 bool CTitleText::Move()
 {
+	// キーによる矢印の移動処理
 	if (SH->TitleMenuPos == MENU_FIRST)
-		fYajiY = TEXT_POS_Y_0;
+		Y = TEXT_POS_Y_0;
 	else
-		fYajiY = TEXT_POS_Y_1;
+		Y = TEXT_POS_Y_1;
 
-	if (fYajiX <= 0.0f) {
-		fYajiX = 20.0f;
+	// 矢印の動き
+	if (X <= 0.0f) {
+		X = 20.0f;
 	}
-	fYajiX -= 0.5f;
+	X -= 0.5f;
 
 	return true;
 }
 
 void CTitleText::Draw()
 {
+	// タイトル背景
 	DrawGraphF(0, 0,
 		SH->GHTitle,
 		FALSE
 	);
+	// テキスト01
 	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5)), TEXT_POS_Y_0,
 		SH->GHText01,
 		TRUE
 	);
+	// テキスト02
 	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT02_SIZE_X * 0.5)), TEXT_POS_Y_1,
 		SH->GHText02,
 		TRUE
 	);
-	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5) - YAJI_SIZE_X - 10.0f) + fYajiX, fYajiY + TEXT_HARFHARF_Y,
+	// 矢印
+	DrawGraphF(((SCREEN_WIDTH *0.5) - (TEXT01_SIZE_X * 0.5) - YAJI_SIZE_X - 10.0f) + X, Y + TEXT_HARFHARF_Y,
 		SH->GHYaji,
 		TRUE
 	);

@@ -1,0 +1,29 @@
+﻿  Enemy.cpp
+c:\users\ysimada\desktop\bowndman\test\shoutinghockey.h(185): warning C4005: 'BULLET_SE': マクロが再定義されました。
+  c:\users\ysimada\desktop\bowndman\test\shoutinghockey.h(118): note: 'BULLET_SE' の以前の定義を確認してください
+c:\users\ysimada\desktop\bowndman\test\shoutinghockey.h(282): warning C4200: 非標準の拡張機能が使用されています: 構造体または共用体中にサイズが 0 の配列があります。
+  c:\users\ysimada\desktop\bowndman\test\shoutinghockey.h(282): note: このメンバーは、既定のコンストラクターまたはコピー/移動代入演算子により無視されます
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(40): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(125): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(137): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(138): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(147): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(152): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(153): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(154): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(165): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(166): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(168): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(169): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(170): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(171): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(174): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(175): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(178): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(179): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+  コード生成しています。
+  1 of 401 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  コード生成が終了しました。
+  test.vcxproj -> C:\Users\ysimada\Desktop\BowndMan\Release\test.exe

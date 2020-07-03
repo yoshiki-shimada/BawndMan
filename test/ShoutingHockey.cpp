@@ -1,5 +1,5 @@
 /*******************************************************************
-* @file		SH.h
+* @file		SH.cpp
 * @brief	MainClass.cpp
 * @author	yshimada
 * @data		20191215
@@ -27,7 +27,9 @@
 
 CShoutingHockey *SH;
 
-//! コンストラクタ
+/*
+* @brief コンストラクタ
+*/
 CShoutingHockey::CShoutingHockey() : ECount(0), Count(1), bMoveFlag(false), TitleMenuPos(MENU_FIRST)
 {
 	SetGraphMode(SCREEN_WIDTH_ANDUI, SCREEN_HEIGHT, SCREEN_COLOR);
@@ -52,7 +54,8 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(1), bMoveFlag(false), Titl
 	UiList = new CRemTaskList(sizeof(CUI), 10);
 	ArrowList = new CRemTaskList(sizeof(CNextArrow), 10);
 	NFadeList = new CRemTaskList(sizeof(CNFade), 10);
-	SFadeList = new CRemTaskList(sizeof(CSFade), 100);
+	//SFadeList = new CRemTaskList(sizeof(CSFade), 100);
+	//ClearOverList = new CRemTaskList(sizeof(CCG), 10);
 
 
 	// グラフィックハンドルの初期化
@@ -160,6 +163,33 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(1), bMoveFlag(false), Titl
 		PORTAL_EFFECT_SIZE, PORTAL_EFFECT_SIZE,
 		GHPortalEffect
 	);
+	//RuleText
+	LoadDivGraph(RULE, 1,
+		1, 1,
+		RULE_SIZE, RULE_SIZE,
+		&GHRule
+	);
+
+	//! クリア
+	//! タイトル
+	LoadDivGraph(CLEARBG, 1,
+		1, 1,
+		SCREEN_WIDTH, SCREEN_HEIGHT,
+		&GHClearBG
+	);
+	//! タイトル
+	LoadDivGraph(CLEAR_ROGO, 1,
+		1, 1,
+		CLEAR_ROGO_SIZE_X, CLEAR_ROGO_SIZE_Y,
+		&GHClearRogo
+	);
+
+	LoadDivGraph(OVER_BG, 1,
+		1, 1,
+		SCREEN_WIDTH, SCREEN_HEIGHT,
+		&GHOverBG
+	);
+
 	//! ノーマルフェード
 	LoadDivGraph(FADEBG, 1,
 		1, 1,
@@ -174,6 +204,18 @@ CShoutingHockey::CShoutingHockey() : ECount(0), Count(1), bMoveFlag(false), Titl
 	);
 
 	//! サウンドハンドルの初期化
+	SHCrash = LoadSoundMem(CRASH_SE);
+	SHClick = LoadSoundMem(CLICK_SE);
+	SHRef = LoadSoundMem(REF_SE);
+	SHShot = LoadSoundMem(SHOT_SE);
+	SHSDown = LoadSoundMem(SDOWN_SE);
+	SHBullet = LoadSoundMem(BULLET_SE);
+	SHDamage = LoadSoundMem(DAMAGE_SE);
+	SHLeverUP = LoadSoundMem(UP_SE);
+	SHNextStage = LoadSoundMem(NEXTSTAGE_SE);
+
+	// PlaySound用ボリューム
+	SetVolumeMusic(200);
 
 	// スクリプト
 	//Script[0] = new CLoadScript("Res\\StagePromoScript.txt");
@@ -195,7 +237,7 @@ void CShoutingHockey::Run() {
 	while (!ProcessMessage()) {
 		ClearDrawScreen();
 
-		//! 長押しの処理
+		//! キーの入力時間処理
 		char cTmpKey[256];
 		GetHitKeyStateAll(cTmpKey);
 		for (int i = 0; i < 256; i++) {
@@ -207,9 +249,11 @@ void CShoutingHockey::Run() {
 			}
 		}
 
+		// ゲーム終了
 		if (Key[KEY_INPUT_ESCAPE])
 			break;
 
+		// ポーズ
 		if (Key[KEY_INPUT_P] == 1)
 			Pause = !Pause;
 
@@ -231,7 +275,7 @@ void CShoutingHockey::Move() {
 	MoveTask(TTextList);
 	MoveTask(WaitList);
 	MoveTask(BGList);
-	MoveTask(ArrowList);
+	//MoveTask(ArrowList);
 	if (!bMoveFlag) {
 		MoveTask(BumperList);
 		MoveTask(PortalList);
@@ -242,9 +286,10 @@ void CShoutingHockey::Move() {
 		MoveTask(Enemy03List);
 		MoveTask(Enemy04List);
 	}
+	//MoveTask(ClearOverList);
 	MoveTask(EffectList);
 	MoveTask(NFadeList);
-	MoveTask(SFadeList);
+	//MoveTask(SFadeList);
 }
 
 /***************************************************************
@@ -264,9 +309,10 @@ void CShoutingHockey::Draw() {
 	DrawTask(Enemy03List);
 	DrawTask(Enemy04List);
 	DrawTask(UiList);
+	//DrawTask(ClearOverList);
 	DrawTask(EffectList);
 	DrawTask(NFadeList);
-	DrawTask(SFadeList);
+	//DrawTask(SFadeList);
 }
 
 /****************************************************************
@@ -289,17 +335,18 @@ void CShoutingHockey::DrawTask(CRemTaskList* list) {
 	}
 }
 
-//=============================================================
-// メインルーチン
-//=============================================================
+/*************************************************************
+* メインルーチン
+*************************************************************/
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
+	// メインクラスのnew
 	SH = new CShoutingHockey();
+	// タイトルクラスのnew
 	new CTitle();
-	new CNFade(FADEIN);
-
 	//! ゲームの実行
 	SH->Run();
-	//delete SH;
+
+	delete SH;
 	return 0;
 }

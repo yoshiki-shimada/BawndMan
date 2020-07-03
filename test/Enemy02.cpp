@@ -1,9 +1,10 @@
-/******************************************************************
-* @file		Enemy.cpp
-* @brief	敵のcpp
+/*******************************************************************
+* @file		Enemy02.cpp
+* @brief	敵2用.cpp
 * @author	yshimada
-* @data		20191221
+* @data		20200107
 *******************************************************************/
+
 #include "DxLib.h"
 #include "ShoutingHockey.h"
 #include "Enemy02.h"
@@ -12,21 +13,22 @@
 #include "Effect.h"
 #include <math.h>
 
-//=============================================================
-// @burief グリーン,コンストラクタ
-//=============================================================
+/*****************************************
+* @brief Enemy02コンストラクタ
+*****************************************/
 CZakoEnemy2::CZakoEnemy2(float x, float y)
-	: CEnemy02(x, y, ZENEMY_CHIP_HARF, 2, 1, 100), nCount(0), rad(0), fBulletSpeed(1)
+	: CEnemy02(x, y, ZENEMY_CHIP_HARF_Y, 2, 1, 100), nCount(0), rad(0), fBulletSpeed(1)
 {
 	SH->ECount++;
 }
 
-//=============================================================
-// 移動
-//=============================================================
+/*****************************************
+* @brief 移動
+*****************************************/
 bool CZakoEnemy2::Move() {
 
 	if (nCount % 200 == 0) {
+		PlaySoundMem(SH->SHBullet, DX_PLAYTYPE_BACK);
 		CRemTaskIter i(SH->PlayerList);
 		CPlayer *player = (CPlayer*)i.Next();
 		rad = atan2(player->Y - Y, player->X - X);
@@ -38,6 +40,7 @@ bool CZakoEnemy2::Move() {
 
 	//! 消す
 	if (Vit <= 0) {
+		PlaySoundMem(SH->SHCrash, DX_PLAYTYPE_BACK);
 		new CEnemyCrash(X, Y);
 		SH->ECount--;
 		//! ゲームクリア処理
@@ -50,11 +53,11 @@ bool CZakoEnemy2::Move() {
 	return true;
 }
 
-//=============================================================
-// 描画
-//=============================================================
+/*****************************************
+* @brief 描画
+*****************************************/
 void CZakoEnemy2::Draw() {
-	DrawGraphF(X - ZENEMY_CHIP_HARF, Y - ZENEMY_CHIP_HARF,
+	DrawGraphF(X - ZENEMY_CHIP_HARF_X, Y - ZENEMY_CHIP_HARF_Y,
 		SH->GHZEnemy02[(nCount / ZENEMY_ANIM_SPEED) % ZENEMY_PATTERN],
 		TRUE
 	);

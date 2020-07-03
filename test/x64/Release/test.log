@@ -1,0 +1,34 @@
+﻿  Bullet.cpp
+c:\users\ysimada\desktop\bowndman\test\bullet.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Bumper.cpp
+c:\users\ysimada\desktop\bowndman\test\bumper.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  BG.cpp
+c:\users\ysimada\desktop\bowndman\test\bg.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Effect.cpp
+c:\users\ysimada\desktop\bowndman\test\effect.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Enemy02.cpp
+c:\users\ysimada\desktop\bowndman\test\enemy02.cpp(7): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Enemy.cpp
+c:\users\ysimada\desktop\bowndman\test\enemy.cpp(7): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Enemy03.cpp
+c:\users\ysimada\desktop\bowndman\test\enemy03.cpp(7): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Enemy04.cpp
+c:\users\ysimada\desktop\bowndman\test\enemy04.cpp(7): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Fade.cpp
+c:\users\ysimada\desktop\bowndman\test\fade.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  LoadScript.cpp
+c:\users\ysimada\desktop\bowndman\test\loadscript.h(5): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  NextArrow.cpp
+c:\users\ysimada\desktop\bowndman\test\nextarrow.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Player.cpp
+c:\users\ysimada\desktop\bowndman\test\player.cpp(8): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Portal.cpp
+c:\users\ysimada\desktop\bowndman\test\portal.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  Selector.cpp
+c:\users\ysimada\desktop\bowndman\test\selector.cpp(8): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  ShoutingHockey.cpp
+c:\users\ysimada\desktop\bowndman\test\shoutinghockey.cpp(8): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  TitleText.cpp
+c:\users\ysimada\desktop\bowndman\test\titletext.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory
+  UI.cpp
+c:\users\ysimada\desktop\bowndman\test\ui.cpp(1): fatal error C1083: include ファイルを開けません。'DxLib.h':No such file or directory

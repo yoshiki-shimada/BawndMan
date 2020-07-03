@@ -1,8 +1,8 @@
 /*******************************************************************
 * @file		Player.h
-* @brief	playerクラス
+* @brief	自機用.h
 * @author	yshimada
-* @data		2019120
+* @data		20191218
 *******************************************************************/
 
 #pragma once
@@ -21,18 +21,21 @@
 class CPlayer :public CMover
 {
 private:
-	float fRad;
+	//float fRad;
 	int nSDownCount;
 	float fSDown;
 
 protected:
 
 public:
+	// 移動方向用
 	float vx, vy;
+	// 初速度
 	float Speed;
+	// スピードアップ
 	float faccel;
-	float x, y;
 
+	// コンストラクタ
 	CPlayer(float x, float y, float dir);
 
 	void* operator new(size_t t) {
@@ -49,6 +52,7 @@ public:
 
 //=============================================================
 // 自機クラス（通常時）
+// @brief	反射等の処理で使う
 //=============================================================
 class CNormalPlayer : public CPlayer
 {
@@ -67,13 +71,14 @@ private:
 	//! 衝突時移動用
 	float fatanZ;
 	// ポータルエリア内、ダメージを受けるエリア内にいるかどうか
-	int nInPortal;
+	//int nInPortal;
 	// 当たり判定用 trueあたっていない　falseあたっている
 	bool bHitportal;
 	//! 反射時のスピード調整用
 	float fUpS;
 	int FlagCount;
 
+	// 速度分解用関数
 	float *Disperse(float Pvx, float Pvy, float PVal);
 
 public:
@@ -85,22 +90,4 @@ public:
 
 	// 移動
 	virtual bool Move();
-};
-
-//=============================================================
-// 自機クラス（復活時）（点滅して当たり判定なし）
-//=============================================================
-class CRevivalMyShip : public CPlayer {
-
-protected:
-	// タイマー
-	int Time;
-
-public:
-	// コンストラクタ
-	CRevivalMyShip(float x, float y, float dir);
-
-	// 移動、描画
-	virtual bool Move();
-	virtual void Draw();
 };
